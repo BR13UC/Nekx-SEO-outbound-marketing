@@ -31,7 +31,8 @@ class EmailService:
         self,
         lead: Dict[str, Any],
         experiment: Dict[str, Any],
-        insights: List[Dict[str, Any]]
+        insights: List[Dict[str, Any]],
+        language: str = "en"
     ) -> Tuple[str, str]:
         """
         Generate email (Template or AI depending on configuration)
@@ -45,7 +46,7 @@ class EmailService:
             Tuple (subject, body)
         """
         if self.use_ai and self.gemini_generator:
-            return self._render_with_ai(lead, experiment, insights)
+            return self._render_with_ai(lead, experiment, insights, language)
         else:
             return self._render_with_template(lead, experiment, insights)
     
@@ -53,7 +54,8 @@ class EmailService:
         self,
         lead: Dict[str, Any],
         experiment: Dict[str, Any],
-        insights: List[Dict[str, Any]]
+        insights: List[Dict[str, Any]],
+        language: str = "en"
     ) -> Tuple[str, str]:
         """Generate email with Gemini AI"""
         
@@ -62,6 +64,7 @@ class EmailService:
         industry = lead.get("industry", "general")
         messaging_angle = experiment.get("messaging_angle", "SEO")
         email_format = experiment.get("email_format", "short")
+        language = language
         
         #Extract SEO issue descriptions
         seo_issues = [i.get("issue_description", "") for i in insights if i.get("issue_description")]
