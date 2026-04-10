@@ -17,19 +17,19 @@ class EmailService:
         insights: List[Dict[str, Any]],
         language: str = "en",
     ) -> Tuple[str, str]:
-        _ = language
+        chosen_language = (language or "en").strip() or "en"
         mode = settings.email_mode
 
         if mode == "template":
-            return self._render_with_template(lead, experiment, insights)
+            return self._render_with_template(lead, experiment, insights, language=chosen_language)
 
         try:
             generator = self._get_gemini_generator()
-            return generator.generate_email(lead, experiment, insights)
+            return generator.generate_email(lead, experiment, insights, language=chosen_language)
         except Exception as exc:
             if settings.strict_email_mode:
                 raise RuntimeError(f"Gemini generation failed and strict mode is enabled: {exc}") from exc
-            return self._render_with_template(lead, experiment, insights)
+            return self._render_with_template(lead, experiment, insights, language=chosen_language)
 
     def _get_gemini_generator(self) -> GeminiEmailGenerator:
         if self._gemini is not None:
@@ -49,6 +49,7 @@ class EmailService:
         lead: Dict[str, Any],
         experiment: Dict[str, Any],
         insights: List[Dict[str, Any]],
+        language: str = "en",
     ) -> Tuple[str, str]:
         company = lead.get("company", "there")
         website = lead.get("website", "")
@@ -61,7 +62,13 @@ class EmailService:
         else:
             bullets = "- We may be able to improve local discoverability based on similar cases."
 
-        body = f"""Hi {company},
+        prefix = "Hi"
+        if language.lower().startswith("fr"):
+            prefix = "Bonjour"
+        elif language.lower().startswith("nl"):
+            prefix = "Hallo"
+
+        body = f"""{prefix} {company},
 
 I looked at your market context around {website} and put together a few opportunities based on comparable client cases:
 {bullets}
@@ -94,6 +101,7 @@ def render_email(
     lead: Dict[str, Any],
     experiment: Dict[str, Any],
     insights: List[Dict[str, Any]],
+    language: str = "en",
 ) -> Tuple[str, str]:
     service = get_email_service()
-    return service.render_email(lead, experiment, insights)
+    return service.render_email(lead, experiment, insights, language=language)

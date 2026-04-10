@@ -17,8 +17,9 @@ class GeminiEmailGenerator:
         lead: Dict[str, Any],
         experiment: Dict[str, Any],
         insights: List[Dict[str, Any]],
+        language: str = "en",
     ) -> tuple[str, str]:
-        prompt = self._build_prompt(lead, experiment, insights)
+        prompt = self._build_prompt(lead, experiment, insights, language=language)
 
         response = self.client.models.generate_content(
             model=self.model,
@@ -36,6 +37,7 @@ class GeminiEmailGenerator:
         lead: Dict[str, Any],
         experiment: Dict[str, Any],
         insights: List[Dict[str, Any]],
+        language: str = "en",
     ) -> str:
         company = str(lead.get("company") or "there")
         website = str(lead.get("website") or "")
@@ -53,9 +55,11 @@ class GeminiEmailGenerator:
             f"- {i.get('issue_description', '')}" for i in insights if i.get("issue_description")
         ) or "- No case-based insights available yet."
 
+        target_language = (language or "en").strip() or "en"
+
         return f"""You are an SEO outreach specialist at Nekx SEO.
 
-Write one personalized B2B cold email in English.
+Write one personalized B2B cold email in language code "{target_language}".
 
 Prospect:
 - Company: {company}

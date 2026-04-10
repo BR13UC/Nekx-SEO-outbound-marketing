@@ -9,6 +9,7 @@ from typing import Any
 
 from backend.config import settings
 from backend.database import connect, init_db, row_to_dict, utcnow_iso
+from backend.domain_types import LeadStatus, can_transition_lead_status
 from backend.services.email_service import render_email
 from backend.services.seo_service import analyze_lead_opportunities
 
@@ -79,41 +80,31 @@ def log_event(logger: logging.Logger, event: str, **fields: Any) -> None:
     logger.info(json.dumps(payload, ensure_ascii=True, sort_keys=True))
 
 
-def select_next_lead(conn) -> dict[str, Any] | None:
+def select_active_ab_test(conn) -> dict[str, Any] | None:
     row = conn.execute(
         """
-        WITH eligible AS (
-          SELECT l.*
-          FROM leads l
-          WHERE l.status = 'new'
-            AND NOT EXISTS (
-              SELECT 1
-              FROM email_variants ev
-              JOIN email_events ee ON ee.email_id = ev.email_id
-              WHERE ev.lead_id = l.lead_id
-                AND ee.event_type = 'sent'
-            )
-        ),
-        segment_last_sent AS (
-          SELECT
-            e.segment AS segment,
-            MAX(ev.sent_at) AS last_sent_at
-          FROM eligible e
-          LEFT JOIN email_variants ev
-            ON ev.lead_id = e.lead_id
-            AND ev.sent_at IS NOT NULL
-          GROUP BY e.segment
-        ),
-        chosen_segment AS (
-          SELECT segment
-          FROM segment_last_sent
-          ORDER BY (last_sent_at IS NOT NULL), last_sent_at ASC, segment ASC
-          LIMIT 1
-        )
-        SELECT e.*
-        FROM eligible e
-        JOIN chosen_segment c ON c.segment = e.segment
-        ORDER BY e.created_at ASC, e.lead_id ASC
+        SELECT t.*
+        FROM ab_tests t
+        WHERE t.active = 1
+          AND (
+            SELECT COUNT(*)
+            FROM email_variants ev
+            WHERE ev.ab_test_id = t.ab_test_id
+          ) < t.max_emails_total
+          AND EXISTS (
+            SELECT 1
+            FROM leads l
+            WHERE l.status = 'new'
+              AND l.segment = t.segment
+              AND COALESCE(l.country, '') = t.country
+              AND NOT EXISTS (
+                SELECT 1
+                FROM email_variants ev2
+                WHERE ev2.lead_id = l.lead_id
+                  AND ev2.delivery_status IN ('ready', 'sent')
+              )
+          )
+        ORDER BY t.created_at ASC, t.ab_test_id ASC
         LIMIT 1
         """
     ).fetchone()
@@ -122,32 +113,67 @@ def select_next_lead(conn) -> dict[str, Any] | None:
     return row_to_dict(row)
 
 
-def select_experiment(conn, segment: str) -> dict[str, Any] | None:
+def select_next_lead_for_ab_test(conn, ab_test: dict[str, Any]) -> dict[str, Any] | None:
     row = conn.execute(
         """
-        SELECT *
-        FROM experiments
-        WHERE active = 1 AND segment = ?
-        ORDER BY created_at ASC, experiment_id ASC
+        SELECT l.*
+        FROM leads l
+        WHERE l.status = 'new'
+          AND l.segment = ?
+          AND COALESCE(l.country, '') = ?
+          AND NOT EXISTS (
+            SELECT 1
+            FROM email_variants ev
+            WHERE ev.lead_id = l.lead_id
+              AND ev.delivery_status IN ('ready', 'sent')
+          )
+        ORDER BY l.created_at ASC, l.lead_id ASC
         LIMIT 1
         """,
-        (segment,),
+        (ab_test["segment"], ab_test["country"]),
     ).fetchone()
-    if row:
-        return row_to_dict(row)
-
-    fallback = conn.execute(
-        """
-        SELECT *
-        FROM experiments
-        WHERE active = 1
-        ORDER BY created_at ASC, experiment_id ASC
-        LIMIT 1
-        """
-    ).fetchone()
-    if not fallback:
+    if not row:
         return None
-    return row_to_dict(fallback)
+    return row_to_dict(row)
+
+
+def select_ab_variant(conn, ab_test: dict[str, Any]) -> dict[str, Any] | None:
+    ab_test_id = int(ab_test["ab_test_id"])
+    variants = conn.execute(
+        "SELECT * FROM ab_test_variants WHERE ab_test_id = ? ORDER BY side ASC",
+        (ab_test_id,),
+    ).fetchall()
+    if len(variants) != 2:
+        return None
+    by_side = {r["side"]: row_to_dict(r) for r in variants}
+    if "A" not in by_side or "B" not in by_side:
+        return None
+
+    written_a = conn.execute(
+        "SELECT COUNT(*) AS n FROM email_variants WHERE ab_test_id = ? AND ab_side = 'A'",
+        (ab_test_id,),
+    ).fetchone()["n"]
+    written_b = conn.execute(
+        "SELECT COUNT(*) AS n FROM email_variants WHERE ab_test_id = ? AND ab_side = 'B'",
+        (ab_test_id,),
+    ).fetchone()["n"]
+
+    max_a = int(ab_test["max_emails_a"])
+    max_b = int(ab_test["max_emails_b"])
+    a_available = written_a < max_a
+    b_available = written_b < max_b
+
+    if not a_available and not b_available:
+        return None
+    if a_available and not b_available:
+        return by_side["A"]
+    if b_available and not a_available:
+        return by_side["B"]
+
+    # Strict alternation with deterministic tie-breaker.
+    if written_a <= written_b:
+        return by_side["A"]
+    return by_side["B"]
 
 
 def ensure_insights(conn, lead: dict[str, Any], now_iso: str, dry_run: bool) -> list[dict[str, Any]]:
@@ -189,14 +215,18 @@ def ensure_insights(conn, lead: dict[str, Any], now_iso: str, dry_run: bool) -> 
 
 
 def interval_guard(conn, min_interval_minutes: int) -> tuple[bool, str | None]:
-    last_sent = conn.execute(
-        "SELECT MAX(sent_at) AS last_sent_at FROM email_variants WHERE sent_at IS NOT NULL"
+    last_activity = conn.execute(
+        """
+        SELECT MAX(created_at) AS last_activity_at
+        FROM email_variants
+        WHERE delivery_status IN ('ready', 'sent')
+        """
     ).fetchone()
-    last_sent_at = last_sent["last_sent_at"] if last_sent else None
-    if not last_sent_at:
+    last_activity_at = last_activity["last_activity_at"] if last_activity else None
+    if not last_activity_at:
         return True, None
 
-    last_dt = _parse_iso_datetime(last_sent_at)
+    last_dt = _parse_iso_datetime(last_activity_at)
     next_allowed = last_dt + timedelta(minutes=min_interval_minutes)
     now = datetime.now(timezone.utc)
     if now < next_allowed:
@@ -204,89 +234,126 @@ def interval_guard(conn, min_interval_minutes: int) -> tuple[bool, str | None]:
     return True, None
 
 
-def run_cycle(dry_run: bool = False) -> int:
+def run_cycle(dry_run: bool = False, mode: str = "live") -> int:
+    mode = (mode or "live").strip().lower()
+    if mode not in {"live", "test"}:
+        mode = "live"
+    effective_dry_run = dry_run or mode == "test"
+
     config_path = Path(settings.scheduler_config_path)
     fallback_logger = setup_logger(DEFAULT_CONFIG)
 
     try:
         config = load_scheduler_config(config_path)
     except json.JSONDecodeError as exc:
-        log_event(fallback_logger, "error", reason="invalid_json_config", detail=str(exc))
+        log_event(fallback_logger, "error", reason="invalid_json_config", detail=str(exc), mode=mode)
         return 2
     except Exception as exc:
-        log_event(fallback_logger, "error", reason="invalid_scheduler_config", detail=str(exc))
+        log_event(fallback_logger, "error", reason="invalid_scheduler_config", detail=str(exc), mode=mode)
         return 2
 
     logger = setup_logger(config)
+    log = lambda event, **fields: log_event(logger, event, mode=mode, dry_run=effective_dry_run, **fields)
 
-    log_event(logger, "start", dry_run=dry_run, config_path=str(config_path))
+    log("start", config_path=str(config_path))
 
     if not bool(config.get("enabled", True)):
-        log_event(logger, "skip", reason="scheduler_disabled")
+        log("skip", reason="scheduler_disabled")
         return 0
 
     min_interval_raw = config.get("min_interval_minutes", DEFAULT_CONFIG["min_interval_minutes"])
     try:
         min_interval_minutes = max(0, int(min_interval_raw))
     except (TypeError, ValueError):
-        log_event(logger, "error", reason="invalid_min_interval_minutes", value=min_interval_raw)
+        log("error", reason="invalid_min_interval_minutes", value=min_interval_raw)
         return 2
 
     conn = connect()
     try:
         init_db(conn)
 
-        if dry_run:
-            log_event(logger, "throttle_bypassed", reason="dry_run")
+        if effective_dry_run:
+            log("throttle_bypassed", reason="dry_run")
         else:
             allowed, reason = interval_guard(conn, min_interval_minutes)
             if not allowed:
-                log_event(logger, "skip", reason="interval_not_reached", detail=reason)
+                log("skip", reason="interval_not_reached", detail=reason)
                 return 0
 
-        lead = select_next_lead(conn)
-        if not lead:
-            log_event(logger, "skip", reason="no_eligible_lead")
+        ab_test = select_active_ab_test(conn)
+        if not ab_test:
+            log("skip", reason="no_active_ab_test")
             return 0
-        log_event(logger, "selected_lead", lead_id=lead["lead_id"], segment=lead["segment"])
 
-        experiment = select_experiment(conn, lead["segment"])
-        if not experiment:
-            log_event(logger, "skip", reason="no_active_experiment")
+        selected_side: str | None = None
+        variant_language = "en"
+
+        lead = select_next_lead_for_ab_test(conn, ab_test)
+        if not lead:
+            log("skip", reason="no_eligible_lead_for_ab_test", ab_test_id=ab_test["ab_test_id"])
             return 0
-        log_event(logger, "selected_experiment", experiment_id=experiment["experiment_id"])
+        variant = select_ab_variant(conn, ab_test)
+        if not variant:
+            log("skip", reason="no_available_ab_variant", ab_test_id=ab_test["ab_test_id"])
+            return 0
+        selected_side = str(variant["side"])
+        variant_language = str(variant.get("language") or "en")
+        experiment = {
+            "messaging_angle": variant["messaging_angle"],
+            "email_format": variant["email_format"],
+            "subject_variant": variant.get("subject_variant"),
+        }
+        log(
+            "selected_ab_test",
+            ab_test_id=ab_test["ab_test_id"],
+            side=selected_side,
+            segment=ab_test["segment"],
+            country=ab_test["country"],
+            lead_id=lead["lead_id"],
+        )
 
         now_iso = utcnow_iso()
-        insights = ensure_insights(conn, lead, now_iso, dry_run=dry_run)
-        log_event(logger, "insights_ready", count=len(insights))
+        insights = ensure_insights(conn, lead, now_iso, dry_run=effective_dry_run)
+        log("insights_ready", count=len(insights))
 
-        subject, content = render_email(lead, experiment, insights)
+        subject, content = render_email(lead, experiment, insights, language=variant_language)
 
-        if dry_run:
-            log_event(
-                logger,
+        if effective_dry_run:
+            log(
                 "generated_email",
-                dry_run=True,
                 lead_id=lead["lead_id"],
-                experiment_id=experiment["experiment_id"],
+                experiment_id=experiment.get("experiment_id"),
+                ab_test_id=ab_test["ab_test_id"],
+                ab_side=selected_side,
                 subject=subject,
                 content=content,
             )
-            log_event(
-                logger,
+            log(
                 "done",
-                dry_run=True,
                 lead_id=lead["lead_id"],
-                experiment_id=experiment["experiment_id"],
+                experiment_id=experiment.get("experiment_id"),
+                ab_test_id=ab_test["ab_test_id"],
+                ab_side=selected_side,
             )
             return 0
 
         cur = conn.execute(
             """
-            INSERT INTO email_variants (lead_id, experiment_id, subject, content, created_at, sent_at)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO email_variants (
+              lead_id, experiment_id, ab_test_id, ab_side, subject, content, delivery_status, created_at, sent_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL)
             """,
-            (lead["lead_id"], experiment["experiment_id"], subject, content, now_iso, now_iso),
+            (
+                lead["lead_id"],
+                experiment.get("experiment_id"),
+                ab_test["ab_test_id"],
+                selected_side,
+                subject,
+                content,
+                "ready",
+                now_iso,
+            ),
         )
         email_id = int(cur.lastrowid)
         conn.execute(
@@ -294,25 +361,31 @@ def run_cycle(dry_run: bool = False) -> int:
             INSERT INTO email_events (email_id, event_type, provider_id, event_time)
             VALUES (?, ?, ?, ?)
             """,
-            (email_id, "sent", None, now_iso),
+            (email_id, "ready", None, now_iso),
         )
-        conn.execute("UPDATE leads SET status = ? WHERE lead_id = ?", ("contacted", lead["lead_id"]))
+        current_status = str(lead.get("status") or "")
+        if (
+            can_transition_lead_status(current_status, LeadStatus.WRITTEN.value)
+            and current_status != LeadStatus.WRITTEN.value
+        ):
+            conn.execute("UPDATE leads SET status = ? WHERE lead_id = ?", (LeadStatus.WRITTEN.value, lead["lead_id"]))
         conn.commit()
 
-        log_event(
-            logger,
+        log(
             "generated_email",
             email_id=email_id,
             lead_id=lead["lead_id"],
-            experiment_id=experiment["experiment_id"],
+            experiment_id=experiment.get("experiment_id"),
+            ab_test_id=ab_test["ab_test_id"],
+            ab_side=selected_side,
             subject=subject,
             content=content,
         )
-        log_event(logger, "sent", email_id=email_id)
-        log_event(logger, "done", email_id=email_id, lead_id=lead["lead_id"])
+        log("ready", email_id=email_id)
+        log("done", email_id=email_id, lead_id=lead["lead_id"])
         return 0
     except Exception as exc:
-        log_event(logger, "error", reason="unexpected_exception", detail=str(exc))
+        log("error", reason="unexpected_exception", detail=str(exc))
         return 1
     finally:
         conn.close()
@@ -327,12 +400,18 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Evaluate selection/throttle logic and insights without writing email/event rows.",
     )
+    parser.add_argument(
+        "--mode",
+        choices=["live", "test"],
+        default="live",
+        help="Execution mode. 'test' enforces dry-run and writes mode=test logs.",
+    )
     return parser
 
 
 def main() -> None:
     args = build_parser().parse_args()
-    raise SystemExit(run_cycle(dry_run=args.dry_run))
+    raise SystemExit(run_cycle(dry_run=args.dry_run, mode=args.mode))
 
 
 if __name__ == "__main__":

@@ -2,11 +2,13 @@ import argparse
 import sqlite3
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 from openpyxl import load_workbook
 
 from backend.config import settings
 from backend.database import init_db, utcnow_iso
+from backend.domain_types import LeadStatus, normalize_email, normalize_website
 
 
 OUTREACH_TABLES = [
@@ -27,6 +29,20 @@ def _clean(value: Any) -> str | None:
         return None
     text = str(value).strip()
     return text or None
+
+
+def _normalize_status(value: str | None) -> str:
+    if not value:
+        return LeadStatus.NEW.value
+    lowered = value.strip().lower()
+    if lowered in {LeadStatus.NEW.value, LeadStatus.WRITTEN.value, LeadStatus.CONTACTED.value}:
+        return lowered
+    raise ValueError(f"Unsupported lead status '{value}'. Allowed: new, written, contacted")
+
+
+def _is_http_url(value: str) -> bool:
+    parts = urlsplit(value)
+    return parts.scheme.lower() in {"http", "https"} and bool(parts.netloc)
 
 
 def reset_tables(conn: sqlite3.Connection) -> None:
@@ -63,19 +79,37 @@ def import_leads(conn: sqlite3.Connection, xlsx_path: Path) -> tuple[int, list[s
             industry = _clean(row[idx.get("industry", -1)]) if "industry" in idx else None
             country = _clean(row[idx.get("country", -1)]) if "country" in idx else None
             source = _clean(row[idx.get("source", -1)]) if "source" in idx else None
-            status = _clean(row[idx.get("status", -1)]) if "status" in idx else "new"
+            status = _clean(row[idx.get("status", -1)]) if "status" in idx else LeadStatus.NEW.value
 
             if not company or not contact_email or not website or not segment:
                 raise ValueError(f"Row has missing required values: {row}")
+            if not _is_http_url(website):
+                raise ValueError(f"Website must include http/https URL format: {website}")
 
+            normalized_email = normalize_email(contact_email)
+            normalized_website = normalize_website(website)
             now = utcnow_iso()
-            conn.execute(
-                """
-                INSERT INTO leads (company, contact_email, website, segment, industry, country, source, created_at, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (company, contact_email, website, segment, industry, country, source, now, status or "new"),
-            )
+            try:
+                conn.execute(
+                    """
+                    INSERT INTO leads (company, contact_email, website, segment, industry, country, source, created_at, status)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        company,
+                        normalized_email,
+                        normalized_website,
+                        segment,
+                        industry,
+                        country,
+                        source,
+                        now,
+                        _normalize_status(status),
+                    ),
+                )
+            except sqlite3.IntegrityError:
+                # Skip duplicate leads based on normalized contact_email + website dedupe rule.
+                continue
             seen_segments.add(segment)
             imported += 1
 

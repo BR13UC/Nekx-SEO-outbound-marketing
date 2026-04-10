@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nekx SEO | Admin Cockpit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/admin.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <p class="logo">NEKX <span>SEO</span></p>
+        <div class="tabs">
+          <button class="tab active" data-tab="overview">Overview</button>
+          <button class="tab" data-tab="scheduler">Scheduler</button>
+          <button class="tab" data-tab="leads">Leads</button>
+          <button class="tab" data-tab="experiments">Experiments</button>
+          <button class="tab" data-tab="activity">Activity</button>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="topbar">
+          <div>
+            <h1>Admin Cockpit</h1>
+            <p class="sub">Operate outbound experiments end-to-end from this interface.</p>
+          </div>
+          <div class="status-badge">
+            <span class="dot" id="cron-dot"></span>
+            <span id="cron-label">Scheduler loading...</span>
+          </div>
+        </div>
+        <div id="flash" class="flash"></div>
+
+        <section class="panel active" data-panel="overview">
+          <div class="filters">
+            <div class="field">
+              <label for="filter-segment">Segment</label>
+              <select id="filter-segment"><option value="">All segments</option></select>
+            </div>
+            <div class="field">
+              <label for="filter-start">Start date</label>
+              <input id="filter-start" type="date" />
+            </div>
+            <div class="field">
+              <label for="filter-end">End date</label>
+              <input id="filter-end" type="date" />
+            </div>
+            <button class="btn primary" id="overview-apply">Apply</button>
+            <button class="btn" id="overview-reset">Reset</button>
+          </div>
+
+          <div class="kpis" style="margin-top:16px">
+            <div class="kpi"><div class="label">Written emails</div><div class="value" id="kpi-written">-</div></div>
+            <div class="kpi"><div class="label">Sent emails</div><div class="value" id="kpi-sent">-</div></div>
+            <div class="kpi"><div class="label">Opened</div><div class="value" id="kpi-opened">-</div></div>
+            <div class="kpi"><div class="label">Replied</div><div class="value" id="kpi-replied">-</div></div>
+            <div class="kpi"><div class="label">Open rate</div><div class="value" id="kpi-open-rate">-</div></div>
+          </div>
+
+          <div class="panel-grid">
+            <div class="block">
+              <h2>Recent Sends By Lead</h2>
+              <p class="hint">Rows are individual sent emails with company and lead details.</p>
+              <table>
+                <thead><tr><th>Company</th><th>Email</th><th>Segment</th><th>Sent at</th></tr></thead>
+                <tbody id="overview-recent"><tr><td colspan="4">Loading...</td></tr></tbody>
+              </table>
+            </div>
+            <div class="block">
+              <h2>Segments</h2>
+              <p class="hint">Sent counts are aggregated across all leads in each segment.</p>
+              <div id="overview-segments"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="scheduler">
+          <div class="panel-grid">
+            <div class="block">
+              <h2>Scheduler Configuration</h2>
+              <p class="hint">Application-level controls only (no OS cron editing).</p>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="scheduler-enabled">Enabled</label>
+                  <select id="scheduler-enabled">
+                    <option value="true">true</option>
+                    <option value="false">false</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="scheduler-interval">Min interval (minutes)</label>
+                  <input id="scheduler-interval" type="number" min="0" step="1" />
+                </div>
+                <div class="field">
+                  <label for="scheduler-log-level">Log level</label>
+                  <select id="scheduler-log-level">
+                    <option>DEBUG</option><option>INFO</option><option>WARNING</option><option>ERROR</option><option>CRITICAL</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="scheduler-log-path">Log file path</label>
+                  <input id="scheduler-log-path" type="text" />
+                </div>
+                <div class="full row-actions">
+                  <button class="btn primary" id="scheduler-save">Save config</button>
+                  <button class="btn" id="scheduler-restart">Run now</button>
+                  <button class="btn" id="scheduler-test">Run test</button>
+                </div>
+              </div>
+            </div>
+            <div class="block">
+              <h2>Status Snapshot</h2>
+              <table>
+                <tbody>
+                  <tr><th>State</th><td id="scheduler-status">-</td></tr>
+                  <tr><th>Last heartbeat</th><td id="scheduler-last-heartbeat">-</td></tr>
+                  <tr><th>Last event</th><td id="scheduler-last-event">-</td></tr>
+                  <tr><th>Last sent</th><td id="scheduler-last-sent">-</td></tr>
+                  <tr><th>Next planned heartbeat</th><td id="scheduler-next-heartbeat">-</td></tr>
+                </tbody>
+              </table>
+              <h2 style="margin-top:14px">Next Emails Queue</h2>
+              <p class="hint">Predicted next emails to be written from active A/B tests.</p>
+              <table>
+                <thead><tr><th>#</th><th>Test</th><th>Lead</th><th>Side</th><th>Angle</th><th>Lang</th></tr></thead>
+                <tbody id="scheduler-queue-rows"><tr><td colspan="6">Loading...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="leads">
+          <div class="panel-grid">
+            <div class="block">
+              <h2>Create Lead</h2>
+              <div class="form-grid">
+                <div class="field"><label>Company*</label><input id="lead-company" /></div>
+                <div class="field"><label>Contact email*</label><input id="lead-email" type="email" /></div>
+                <div class="field"><label>Website*</label><input id="lead-website" /></div>
+                <div class="field"><label>Segment*</label><input id="lead-segment" list="segments-list" /></div>
+                <div class="field"><label>Industry</label><input id="lead-industry" /></div>
+                <div class="field"><label>Country</label><input id="lead-country" /></div>
+                <div class="field"><label>Source</label><input id="lead-source" list="sources-list" /></div>
+                <div class="field"><label>Status</label><select id="lead-status"><option>new</option><option>written</option><option>contacted</option></select></div>
+                <div class="full"><button class="btn primary" id="lead-create">Create lead</button></div>
+              </div>
+              <datalist id="segments-list"></datalist>
+              <datalist id="sources-list"></datalist>
+            </div>
+            <div class="block">
+              <h2>Leads</h2>
+              <div class="row-actions" style="margin-bottom:8px">
+                <button class="btn" id="leads-prev">Prev</button>
+                <button class="btn" id="leads-next">Next</button>
+                <span class="hint" id="leads-page">Page 1</span>
+                <button class="btn" id="leads-refresh">Refresh</button>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th><button class="btn" id="leads-sort-company" data-lead-sort="company" type="button">Company</button></th>
+                    <th><button class="btn" id="leads-sort-segment" data-lead-sort="segment" type="button">Segment</button></th>
+                    <th><button class="btn" id="leads-sort-status" data-lead-sort="status" type="button">Status</button></th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="leads-rows"><tr><td colspan="4">Loading...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="experiments">
+          <div class="panel-grid">
+            <div class="block">
+              <h2>Create A/B Test</h2>
+              <div class="form-grid">
+                <div class="field"><label>Name*</label><input id="ab-name" /></div>
+                <div class="field"><label>Segment*</label><select id="ab-segment"><option value="">Select segment</option></select></div>
+                <div class="field"><label>Country*</label><input id="ab-country" placeholder="NL" /></div>
+                <div class="field"><label>Comparison mode*</label><input id="ab-mode" placeholder="angle_only / custom" /></div>
+                <div class="field"><label>Changed dimensions*</label><input id="ab-dimensions" placeholder="messaging_angle,email_format" /></div>
+                <div class="field"><label>Max emails (total)*</label><input id="ab-max-emails" type="number" min="1" step="1" /></div>
+                <div class="field"><label>Active</label><select id="exp-active"><option value="true">true</option><option value="false">false</option></select></div>
+
+                <div class="full"><h2 style="margin:8px 0 0">Variant A</h2></div>
+                <div class="field"><label>Angle A*</label><select id="ab-angle-a"><option value="">Select messaging angle</option></select></div>
+                <div class="field"><label>Format A*</label><select id="ab-format-a"><option value="">Select email format</option></select></div>
+                <div class="field"><label>Subject A</label><input id="ab-subject-a" /></div>
+                <div class="field"><label>Language A</label><select id="ab-language-a"><option value="">Select language</option></select></div>
+
+                <div class="full"><h2 style="margin:8px 0 0">Variant B</h2></div>
+                <div class="field"><label>Angle B*</label><select id="ab-angle-b"><option value="">Select messaging angle</option></select></div>
+                <div class="field"><label>Format B*</label><select id="ab-format-b"><option value="">Select email format</option></select></div>
+                <div class="field"><label>Subject B</label><input id="ab-subject-b" /></div>
+                <div class="field"><label>Language B</label><select id="ab-language-b"><option value="">Select language</option></select></div>
+                <div class="full"><button class="btn primary" id="exp-create">Create A/B test</button></div>
+              </div>
+            </div>
+            <div class="block">
+              <h2>A/B Tests</h2>
+              <div class="row-actions" style="margin-bottom:8px">
+                <button class="btn" id="exp-prev">Prev</button>
+                <button class="btn" id="exp-next">Next</button>
+                <span class="hint" id="exp-page">Page 1</span>
+                <button class="btn" id="exp-refresh">Refresh</button>
+              </div>
+              <table>
+                <thead><tr><th>ID</th><th>Name</th><th>Segment</th><th>Country</th><th>Max</th><th>Sent A/B</th><th>Reply A/B</th><th>Winner</th><th>Active</th></tr></thead>
+                <tbody id="exp-rows"><tr><td colspan="9">Loading...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" data-panel="activity">
+          <div class="panel-grid">
+            <div class="block">
+              <h2>Scheduler Events (Main)</h2>
+              <table>
+                <thead><tr><th>Timestamp</th><th>Event</th><th>Detail</th></tr></thead>
+                <tbody id="activity-scheduler-main"><tr><td colspan="3">Loading...</td></tr></tbody>
+              </table>
+              <h2 style="margin-top:14px">Scheduler Events (Test)</h2>
+              <table>
+                <thead><tr><th>Timestamp</th><th>Event</th><th>Detail</th></tr></thead>
+                <tbody id="activity-scheduler-test"><tr><td colspan="3">Loading...</td></tr></tbody>
+              </table>
+            </div>
+            <div class="block">
+              <h2>Email Events</h2>
+              <table>
+                <thead><tr><th>Time</th><th>Type</th><th>Lead</th></tr></thead>
+                <tbody id="activity-emails"><tr><td colspan="3">Loading...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/static/admin.js"></script>
+  </body>
+</html>

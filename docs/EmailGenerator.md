@@ -1,7 +1,6 @@
 # Email Generation Module (Current)
 
-The unified email generation flow now lives fully in `backend/services/`:
-
+The email generation stack is implemented in:
 - `backend/services/email_service.py`
 - `backend/services/gemini_service.py`
 
@@ -10,15 +9,31 @@ The unified email generation flow now lives fully in `backend/services/`:
 - `NEKX_EMAIL_MODE=template`
 
 Fallback behavior:
-- `NEKX_EMAIL_FALLBACK_MODE=fallback` (default): fallback to template on Gemini errors
-- `NEKX_EMAIL_FALLBACK_MODE=strict`: raise error instead of fallback
+- `NEKX_EMAIL_FALLBACK_MODE=fallback` (default): fallback to template on Gemini errors.
+- `NEKX_EMAIL_FALLBACK_MODE=strict`: return generation error instead of fallback.
 
-## Local smoke test
+## Inputs Used by Generator
+- lead profile (`company`, `website`, `segment`, optional `industry`, `country`)
+- variant context (experiment or A/B variant attributes)
+- up to 3 SEO opportunities from `seo_insights`
+
+## Output Contract
+- one subject line
+- one concise email body
+- compliance elements included:
+  - sender identity
+  - unsubscribe path/instruction
+
+## Guardrails
+- no fabricated technical findings
+- cautious language for case-based opportunities (`may`, `could`, `likely`)
+- concise, practical CTA
+
+## Local Smoke Test
 ```bash
 python -m backend.tools.demo_gemini --lead-id 1 --experiment-id 1
 ```
 
-The service keeps compliance constraints in prompt/template output:
-- clear sender identity
-- unsubscribe instruction
-- cautious wording for case-based opportunities
+## Operational Advice
+- Use `fallback` mode in local/dev environments for resilience.
+- Use `strict` mode in controlled QA when validating model dependencies and error handling.

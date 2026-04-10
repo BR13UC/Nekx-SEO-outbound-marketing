@@ -1,13 +1,13 @@
 # Case Insights Source Mapping
 
 ## Purpose
-This document explains how Step 1 insight generation is currently sourced while direct client SEO API access is unavailable.
+This document describes how Step 1 SEO opportunity generation currently works while live external SEO APIs are not yet integrated.
 
-## Input source
-- Raw source: Nekx result page HTML snapshot provided in project conversation
-- Structured snapshot: `backend/data/case_insights.json`
+## Input Source
+- Raw source: Nekx case/result page snapshot provided during project setup.
+- Structured data file: `backend/data/case_insights.json`.
 
-## Extracted benchmark blocks
+## Benchmark Blocks (Current Snapshot)
 ### Global counters
 - Cases: 4
 - Screenings: 648K
@@ -19,7 +19,7 @@ This document explains how Step 1 insight generation is currently sourced while 
 - Team page visitors: +192%
 - Erica location visitors: +292%
 - Meppel location visitors: +294%
-- Qualitative note: 0 hours of own work
+- Qualitative note: 0 hours own work
 
 ### Case 2 - SealteQ
 - SealteQ South (Geleen) visitors: +236%
@@ -39,13 +39,18 @@ This document explains how Step 1 insight generation is currently sourced while 
 - Clicks: +29%
 - General screenings: +44%
 
-## How Step 1 uses these values
-`backend/services/seo_service.py` maps lead segment/industry to tags and selects comparable cases.
+## How Step 1 Uses This Data
+`backend/services/seo_service.py` maps lead segment/industry to comparable case tags, then generates 1-3 concise opportunity statements.
 
-It then creates 1-3 opportunity statements with these rules:
-- evidence-based benchmark references
-- cautious language (`may`, `could`, `likely`)
-- no direct claim of discovered technical errors without live audit
+Rules:
+- reference benchmark evidence
+- use cautious language (`may`, `could`, `likely`)
+- do not claim direct technical errors without live audit evidence
 
-## Upgrade path
-When live SEO data is available, keep this file as fallback benchmark context and route primary analysis to the real API.
+Generated outputs are stored in `seo_insights` so downstream routes remain unchanged.
+
+## Upgrade Path
+When live SEO data is integrated:
+- keep this dataset as fallback context
+- route primary analysis to external API results
+- preserve cautious language when confidence is partial

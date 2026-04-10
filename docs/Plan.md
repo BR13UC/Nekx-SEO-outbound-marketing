@@ -1,290 +1,109 @@
-# Nekx SEO – Technical Plan
+# Nekx SEO - Technical Plan
 
-- [System Goal](#system-goal)
-- [System Architecture](#system-architecture)
-- [1. Lead Sourcing](#1-lead-sourcing)
-- [2. SEO Analysis](#2-seo-analysis)
-- [3. Email Generation](#3-email-generation)
-- [4. Email Sending](#4-email-sending)
-- [5. Experiment Engine](#5-experiment-engine)
-- [System Workflow](#system-workflow)
-- [Technological Stack](#technological-stack)
-
-## System Goal
-
-The goal of the system is to automatically test:
-
-- different **target audiences**
-- different **email messages**
-- different **email formats**
-
-and identify which combinations generate the best results.
-
-The system should progressively learn and converge toward the most effective outreach strategy.
-
----
-
-# System Architecture
-
-The system consists of five main modules.
-
----
-
-# 1. Lead Sourcing
-
-The system collects potential prospects.
-
-Initial segments:
-
-- Dutch SMBs (5–50 employees)
-- Local businesses
-- Privacy-focused organisations
-- SEO / web agencies
-- E-commerce companies
-
-However, the system should experiment to determine which segments perform best.
-
-### Lead Structure
-
-- company
-- contact_email
+## Goal
+Build a compliant, auditable outbound experimentation engine that improves outreach performance over time by learning which combinations of:
 - segment
-- website
-- country
-- industry
-
-
-### Possible Lead Sources
-
-Option 1 – Client-provided leads (ideal)
-
-Nekx provides a list of companies to contact.
-
-Option 2 – Generated leads
-
-- Public company directories
-- Company websites
-- Google Maps / local listings
-- LinkedIn scraping
-- Client-provided lead lists
-
----
-
-# 2. SEO Analysis
-
-Before sending outreach emails, the system must gather insights about the prospect's website.
-
-Two possible approaches exist.
-
-### Option 1 – External SEO API (ideal)
-
-Use a Nekx API or third-party SEO tool to obtain:
-
-- SEO score
-- missing metadata
-- site performance issues
-- schema markup issues
-- content gaps
-
-### Option 2 – Internal SEO Analysis
-
-Generate simple SEO insights internally by analyzing:
-
-- page titles
-- meta descriptions
-- page speed
-- mobile friendliness
-- structured data
-
-This approach is technically more complex.
-
----
-
-# 3. Email Generation
-
-The system generates outreach emails based on an **experiment matrix**.
-
-Each experiment tests combinations of:
-
-- audience segment
 - messaging angle
-- SEO insight
 - email format
-- subject line
-- call-to-action
 
-### Example Experiment Matrix
+perform best.
 
-| Segment | Messaging Angle | Version |
-|--------|----------------|--------|
-| SMB | Cost savings | A |
-| SMB | AI visibility | B |
-| Agencies | White-label execution | A |
-| Local business | Local SEO automation | A |
+## Implementation Phases
+### Phase 0 (Current)
+- FastAPI + SQLite baseline operational.
+- Lead CRUD, SEO insight generation, email generation, send stub, analytics endpoints.
+- A/B testing entities and scheduling loop implemented.
+- Admin cockpit available.
 
-### Messaging Angles
+### Phase 1 (Near-term hardening)
+- Improve event ingestion realism (provider webhooks and event reconciliation).
+- Enforce stronger data quality checks on lead inputs.
+- Expand test coverage around scheduler and attribution edges.
+- Improve audit exports and retention/deletion operations.
 
-Possible angles include:
+### Phase 2 (Delivery integration)
+- Replace send stub with real provider integration (Resend preferred).
+- Track provider IDs and status transitions end-to-end.
+- Add retry, idempotency, and dead-letter/error observability.
 
-- Cost savings
-- Time savings
-- Data sovereignty (EU hosting)
-- AI visibility
-- Execution vs tools
-- Local visibility
+### Phase 3 (SEO intelligence upgrade)
+- Introduce external SEO API for live site checks.
+- Keep case-based fallback when API unavailable.
+- Preserve cautious language unless findings are confirmed.
 
----
+### Phase 4 (Optimization)
+- Add baseline-safe optimization (random within constraints first).
+- Optionally introduce scoring or lightweight bandits after attribution reliability is proven.
 
-# 4. Email Sending
+## Module Plan
+### 1) Lead Sourcing
+Input channels:
+- client-provided lead files (preferred)
+- curated internal sourcing
 
-Emails are sent using an email delivery provider.
+Required fields:
+- `company`
+- `contact_email`
+- `website`
+- `segment`
 
-Possible tools:
+Optional but recommended:
+- `industry`
+- `country`
+- `source`
 
-- SMTP
-- SendGrid
-- Mailgun
-- Resend
+### 2) SEO Analysis
+Current mode:
+- case-benchmark opportunity statements from local snapshot.
 
-Required features:
+Target mode:
+- live SEO checks via external API.
 
-- sending email variants
-- open tracking
-- reply tracking
-- conversion tracking
+Constraints:
+- avoid fabricated technical assertions
+- prefer actionable, concise insights (1-3 per lead)
 
-Emails must comply with:
+### 3) Email Generation
+Inputs:
+- lead profile
+- selected variant (`experiment` or `ab-test side`)
+- SEO opportunities
 
-- GDPR
-- Dutch telecom law
-- business-only outreach policies
+Output constraints:
+- concise and factual
+- clear sender identity
+- unsubscribe path
+- cautious wording when insights are probabilistic
 
----
+### 4) Email Sending
+Current:
+- stub send flow for lifecycle wiring.
 
-# 5. Experiment Engine
+Target:
+- real provider, webhook processing, accurate sent/open/reply attribution.
 
-This module evaluates campaign performance.
-
-It logs experiments and determines which strategies work best.
-
-### Metrics Tracked
-
+### 5) Experiment Engine
+Track and compare:
+- sent rate
 - open rate
 - reply rate
-- positive replies
-- conversions
+- positive reply indicators
 
-### Evaluation Model
+Attribution requirement:
+- each email mapped to `lead_id` + variant context (`experiment_id` or `ab_test_id` + `ab_side`).
 
-Experiments are evaluated based on:
-`Segment × Messaging Angle × Email Format`
+## Compliance and Governance
+- GDPR principles: minimization, purpose, retention, deletion.
+- Dutch B2B outreach requirements: relevance, identity, opt-out.
+- Human-in-the-loop on irreversible or high-volume actions.
 
+## Technology Stack
+- Python
+- FastAPI
+- SQLite
+- Gemini API (default model path) with template fallback
 
-The system progressively identifies the best-performing combinations.
-
----
-
-# System Workflow
-
-The system runs in cycles.
-
-1. Collect new leads
-2. Assign segment
-3. Select experiment variant
-4. Generate email
-5. Send email
-6. Track results
-7. Update experiment scores
-8. Adjust strategy
-
----
-
-# Technological Stack
-
-## Backend
-
-Python  
-FastAPI  
-SQLite
-
-### Why
-
-Python is well suited for automation and AI workflows.
-
-FastAPI provides a lightweight backend API.
-
-SQLite allows simple storage of:
-
-- leads
-- experiments
-- campaign results
-
----
-
-## Automation
-
-Cron jobs + Python scripts
-
-### Why
-
-Cron jobs allow scheduled tasks such as:
-
-- collecting leads
-- sending emails
-- updating metrics
-- recalculating experiment performance
-
-If the system scales later, task queues like **Celery** could be introduced.
-
----
-
-## Email Generation
-
-OpenAI API
-
-### Why
-
-The OpenAI API allows dynamic generation of personalized outreach emails based on:
-
-- company information
-- messaging angle
-- SEO insights
-
-This makes rapid experimentation possible.
-
----
-
-## Email Sending
-
-Resend API
-
-### Why
-
-Resend provides a developer-friendly API for sending transactional emails and tracking events.
-
-Features include:
-
-- delivery tracking
-- event logging
-- easy integration with Python
-
----
-
-## Analytics
-
-SQLite + internal dashboard
-
-### Why
-
-All experiment data is stored in the database.
-
-Metrics can be analyzed using SQL queries.
-
-A lightweight dashboard can display:
-
-- open rates
-- reply rates
-- conversions
-- segment performance
-
----
+## Success Criteria
+- Reliable end-to-end attribution for generated and sent emails.
+- Measurable weekly learning on variant performance.
+- No compliance regressions in generated outreach content.
