@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 
 from ..database import Db, row_to_dict, utcnow_iso
 from ..schemas.seo_schema import SeoAnalyzeIn, SeoInsightOut
-from ..services.seo_service import analyze_website
+from ..services.seo_service import analyze_lead_opportunities
 
 
 router = APIRouter(tags=["seo"])
@@ -15,17 +15,17 @@ def seo_analyze(body: SeoAnalyzeIn, db=Db):
         raise HTTPException(status_code=404, detail="lead not found")
 
     website = body.website or lead["website"]
-    insights = analyze_website(website)
+    insights = analyze_lead_opportunities(dict(lead), website=website)
 
     now = utcnow_iso()
     created: list[dict] = []
-    for i in insights:
+    for insight in insights:
         cur = db.execute(
             """
             INSERT INTO seo_insights (lead_id, issue_type, issue_description, severity, created_at)
             VALUES (?, ?, ?, ?, ?)
             """,
-            (body.lead_id, i["issue_type"], i["issue_description"], i["severity"], now),
+            (body.lead_id, insight["issue_type"], insight["issue_description"], insight["severity"], now),
         )
         row = db.execute("SELECT * FROM seo_insights WHERE insight_id = ?", (cur.lastrowid,)).fetchone()
         created.append(row_to_dict(row))
@@ -40,4 +40,4 @@ def get_seo_insights(lead_id: int, db=Db):
         "SELECT * FROM seo_insights WHERE lead_id = ? ORDER BY severity DESC, created_at DESC",
         (lead_id,),
     ).fetchall()
-    return [row_to_dict(r) for r in rows]
+    return [row_to_dict(row) for row in rows]

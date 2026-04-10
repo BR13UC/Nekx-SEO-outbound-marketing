@@ -1,82 +1,62 @@
 from __future__ import annotations
 
-import re
-import urllib.request
-from typing import Dict, List
+import json
+import random
+from pathlib import Path
+from typing import Any, Dict, List, Mapping
+
+from ..config import settings
 
 
-_TITLE_RE = re.compile(r"<title[^>]*>(.*?)</title>", re.IGNORECASE | re.DOTALL)
-_META_DESC_RE = re.compile(
-    r'<meta[^>]+name=["\']description["\'][^>]*content=["\']([^"\']+)["\']',
-    re.IGNORECASE,
-)
-_CANONICAL_RE = re.compile(r'<link[^>]+rel=["\']canonical["\']', re.IGNORECASE)
-_SCHEMA_RE = re.compile(r'application/ld\+json', re.IGNORECASE)
+def _load_case_data() -> Dict[str, Any]:
+    path = Path(settings.case_insights_path)
+    with path.open("r", encoding="utf-8") as fh:
+        return json.load(fh)
 
 
-def _fetch(url: str) -> str:
-    req = urllib.request.Request(url, headers={"User-Agent": "nekx-outreach-agent/0.1"})
-    with urllib.request.urlopen(req, timeout=10) as resp:
-        raw = resp.read()
-        # Best-effort decode; HTML meta charset parsing is out of scope for v0.
-        return raw.decode("utf-8", errors="replace")
+def _random_improvement(case: Mapping[str, Any]) -> str:
+    metrics = case.get("metrics", [])
+    if not metrics:
+        return "traffic and discoverability improved"
+
+    metric = random.choice(metrics)
+    label = str(metric.get("label", "SEO metric")).strip() or "SEO metric"
+    value = str(metric.get("value", "")).strip()
+    if value:
+        return f"{label} improved by {value}"
+    return f"{label} improved"
 
 
-def analyze_website(website: str) -> List[Dict]:
-    url = website.strip()
-    if not (url.startswith("http://") or url.startswith("https://")):
-        url = "https://" + url
+def analyze_lead_opportunities(lead: Mapping[str, Any], website: str | None = None) -> List[Dict[str, Any]]:
+    # Temporary simplified behavior: pick one random proven client improvement.
+    _ = website
+    data = _load_case_data()
+    cases = data.get("cases", [])
+    company = str(lead.get("company") or "this company").strip()
 
-    insights: List[Dict] = []
-    try:
-        html = _fetch(url)
-    except Exception as e:
+    if not cases:
         return [
             {
-                "issue_type": "fetch_error",
-                "issue_description": f"Could not fetch homepage ({e.__class__.__name__}).",
+                "issue_type": "case_based_random_improvement",
+                "issue_description": (
+                    f"Nekx has seen measurable SEO improvements in comparable clients; "
+                    f"{company} could likely benefit from a similar quick-win approach."
+                ),
                 "severity": 5,
             }
         ]
 
-    title = _TITLE_RE.search(html)
-    if not title or not title.group(1).strip():
-        insights.append(
-            {
-                "issue_type": "missing_title",
-                "issue_description": "Homepage is missing a <title> tag (or it is empty).",
-                "severity": 8,
-            }
-        )
+    chosen_case = random.choice(cases)
+    case_name = str(chosen_case.get("name", "a comparable client")).strip() or "a comparable client"
+    improvement = _random_improvement(chosen_case)
 
-    meta_desc = _META_DESC_RE.search(html)
-    if not meta_desc:
-        insights.append(
-            {
-                "issue_type": "missing_meta_description",
-                "issue_description": "Homepage appears to be missing a meta description.",
-                "severity": 6,
-            }
-        )
-
-    if not _CANONICAL_RE.search(html):
-        insights.append(
-            {
-                "issue_type": "missing_canonical",
-                "issue_description": "Homepage appears to be missing a canonical link tag.",
-                "severity": 4,
-            }
-        )
-
-    if not _SCHEMA_RE.search(html):
-        insights.append(
-            {
-                "issue_type": "missing_schema",
-                "issue_description": "No JSON-LD structured data detected on the homepage.",
-                "severity": 3,
-            }
-        )
-
-    return insights[:3] or [
-        {"issue_type": "no_findings", "issue_description": "No basic issues detected on the homepage.", "severity": 1}
+    return [
+        {
+            "issue_type": "case_based_random_improvement",
+            "issue_description": (
+                f"A similar Nekx client ({case_name}) saw {improvement}. "
+                f"This could be a practical SEO opportunity for {company} as well."
+            ),
+            "severity": 5,
+        }
     ]

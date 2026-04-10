@@ -1,172 +1,114 @@
-# Nekx SEO – AI Outreach Agent
+# Nekx SEO - AI Outreach Agent
 
-- [Project Overview](#project-overview)
-- [Objectives](#objectives)
-- [Key Idea](#key-idea)
-- [Legal Considerations](#legal-considerations)
-- [Ethical Considerations](#ethical-considerations)
-- [Project Scope](#project-scope)
-- [Repository Structure](#repository-structure)
+## What this repo does
+This project runs an outbound experimentation loop:
 
-## Project Overview
+1. import leads
+2. generate case-based SEO opportunities
+3. generate emails (Gemini by default)
+4. send emails (provider stub in v0)
+5. track events and compare experiment variants
 
-This project explores how artificial intelligence can support outbound marketing for **Nekx SEO**, a Dutch SEO automation platform.
+The system is intentionally auditable: every generated email is linked to lead and experiment records in SQLite.
 
-The goal is to design an **AI-powered outreach agent** capable of identifying potential prospects, generating personalized SEO insights, and sending targeted outreach emails.
+## Current workflow (implemented)
+- Step 1 uses a local case-insights snapshot derived from existing Nekx result examples.
+- Step 2 uses Gemini by default (`NEKX_EMAIL_MODE=gemini`) with automatic template fallback unless strict mode is enabled.
+- Step 3 `/emails/send` is still a provider stub that marks an email as sent and records a `sent` event.
 
-Traditional outbound marketing often relies on generic cold emails sent to many companies. These messages frequently lack relevance and therefore generate low engagement.
+## Quick start
 
-This project investigates whether AI can improve this process by:
-
-- analyzing company websites
-- detecting SEO opportunities
-- generating short SEO insights
-- creating personalized outreach messages
-
-The system is designed as an **experimentation engine** that continuously tests different outreach strategies and learns which combinations perform best.
-
----
-
-# Objectives
-
-The AI outreach agent should be able to automatically test:
-
-- different **target audiences**
-- different **email messages**
-- different **email formats**
-
-The goal is to identify which combinations generate the best results and progressively converge toward an optimal outreach strategy.
-
-### Success metrics
-
-The system evaluates performance using:
-
-- Open rate
-- Reply rate
-- Positive reply rate
-- Demo / trial conversions
-
----
-
-# Key Idea
-
-Instead of sending generic marketing emails, the system provides **immediate value to prospects** by including short SEO insights derived from their website.
-
-Example:
-
-Instead of:
-
-> "We offer SEO services."
-
-The email might say:
-
-> "We noticed your site is missing structured schema markup and your pages load slowly on mobile. This may affect your visibility in Google and AI search results."
-
-This approach aims to increase:
-
-- relevance
-- trust
-- engagement
-
----
-
-# Legal Considerations
-
-Since the project operates in the Netherlands and targets European businesses, the outreach system must comply with:
-
-### GDPR
-
-The General Data Protection Regulation governs the processing of personal data within the European Union.
-
-Key principles:
-
-- lawful data processing
-- transparency
-- data minimization
-- user rights (access, deletion)
-
-### Dutch Telecommunications Act
-
-This law regulates electronic marketing communication.
-
-B2B outreach is allowed provided that:
-
-- messages are relevant to the recipient’s business
-- the sender is clearly identifiable
-- an unsubscribe option is provided
-
----
-
-# Ethical Considerations
-
-Even when legally permitted, AI-supported marketing raises ethical questions.
-
-Important principles include:
-
-### Transparency
-
-Recipients should not be misled regarding the nature of communication or how insights are generated.
-
-### Avoiding spam-like automation
-
-AI allows large-scale automation, but communication should remain:
-
-- relevant
-- targeted
-- valuable
-
-### Human oversight
-
-AI should support marketing decisions, not fully replace human judgment.
-
----
-
-# Project Scope
-
-The objective of this project is **not to build a fully commercial product**, but to:
-
-- design the architecture of an AI outreach system
-- explore how it could work in practice
-- test the concept through experimentation
-
----
-
-# Repository Structure
-
-## Quick tool: add a new prospect
-
-Use the CLI helper to insert a lead into the local database:
-
+### 0) Start python environment
 ```bash
-python -m backend.tools.add_prospect \
-  --company "Acme BV" \
-  --contact-email "founder@acme.nl" \
-  --website "https://acme.nl" \
-  --segment "B2B SaaS"
+python3 -m venv .venv && source .venv/bin/activate
 ```
 
-You can also run it without arguments for interactive prompts:
-
+### 1) Install dependencies
 ```bash
-python -m backend.tools.add_prospect
+pip install -r backend/requirements.txt
 ```
 
-## Quick tool: view full database content
-
-Print all tables and rows:
-
+### 2) Reset DB + import leads + seed experiments
 ```bash
-python -m backend.tools.view_db
+python -m backend.tools.reset_and_import_leads \
+  --db-path data/nekx.db \
+  --xlsx-path data/groningen_food_drink_leads.xlsx
 ```
 
-Output a SQL-style full dump:
-
+### 3) Run API
 ```bash
-python -m backend.tools.view_db --dump
+uvicorn backend.main:app --reload
 ```
 
-Output JSON (all tables):
-
+### 4) Check health
 ```bash
-python -m backend.tools.view_db --json
+curl http://127.0.0.1:8000/api/v1/health
 ```
+
+## End-to-end example
+### Generate case-based insights for one lead
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/seo/analyze \
+  -H 'Content-Type: application/json' \
+  -d '{"lead_id": 1}'
+```
+
+### Generate one email
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/emails/generate \
+  -H 'Content-Type: application/json' \
+  -d '{"lead_id": 1, "experiment_id": 1}'
+```
+
+### Mark email as sent (v0 stub)
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/emails/send \
+  -H 'Content-Type: application/json' \
+  -d '{"email_id": 1}'
+```
+
+## Cron/Manual outbound cycle
+Run one manual cycle:
+```bash
+python -m backend.tools.run_outbound_cycle
+```
+
+Dry-run mode (no email/event rows written):
+```bash
+python -m backend.tools.run_outbound_cycle --dry-run
+```
+
+Example cron (every minute, throttled by config):
+```bash
+* * * * * cd /home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing && ./.venv/bin/python -m backend.tools.run_outbound_cycle >> /tmp/nekx-cron.log 2>&1
+```
+
+## Environment variables
+- `NEKX_DB_PATH` (default: `data/nekx.db`)
+- `NEKX_LEADS_XLSX_PATH` (default: `data/groningen_food_drink_leads.xlsx`)
+- `NEKX_CASE_INSIGHTS_PATH` (default: `backend/data/case_insights.json`)
+- `NEKX_EMAIL_MODE` (`gemini` or `template`, default: `gemini`)
+- `NEKX_EMAIL_FALLBACK_MODE` (`fallback` or `strict`, default: `fallback`)
+- `GOOGLE_API_KEY` (required only when Gemini mode is used)
+- `NEKX_GEMINI_MODEL` (default: `gemini-2.5-flash`)
+- `NEKX_SCHEDULER_CONFIG_PATH` (default: `data/scheduler_config.json`)
+
+## Data model
+Core tables:
+- `leads`
+- `seo_insights`
+- `experiments`
+- `email_variants`
+- `email_events`
+- `replies`
+- `experiment_results`
+
+## Tools
+- `python -m backend.tools.reset_and_import_leads`
+- `python -m backend.tools.add_prospect`
+- `python -m backend.tools.view_db`
+- `python -m backend.tools.demo_gemini`
+
+## Notes
+- Step 1 insights are case-based opportunities (not direct technical claims about the prospect website).
+- Keep compliance elements in generated emails (identity + unsubscribe).

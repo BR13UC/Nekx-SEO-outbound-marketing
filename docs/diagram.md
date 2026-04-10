@@ -33,5 +33,3 @@ STEP 2 — EMAIL GENERATION
    | (The Strategy) |------------->| (A: Formal       |
    |                |              |  B: Modern)      |
    +----------------+              +------------------+
-                                                            
-                                                            
