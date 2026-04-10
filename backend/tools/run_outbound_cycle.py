@@ -260,7 +260,18 @@ def run_cycle(dry_run: bool = False) -> int:
         insights = ensure_insights(conn, lead, now_iso, dry_run=dry_run)
         log_event(logger, "insights_ready", count=len(insights))
 
+        subject, content = render_email(lead, experiment, insights)
+
         if dry_run:
+            log_event(
+                logger,
+                "generated_email",
+                dry_run=True,
+                lead_id=lead["lead_id"],
+                experiment_id=experiment["experiment_id"],
+                subject=subject,
+                content=content,
+            )
             log_event(
                 logger,
                 "done",
@@ -270,7 +281,6 @@ def run_cycle(dry_run: bool = False) -> int:
             )
             return 0
 
-        subject, content = render_email(lead, experiment, insights)
         cur = conn.execute(
             """
             INSERT INTO email_variants (lead_id, experiment_id, subject, content, created_at, sent_at)
@@ -295,6 +305,8 @@ def run_cycle(dry_run: bool = False) -> int:
             email_id=email_id,
             lead_id=lead["lead_id"],
             experiment_id=experiment["experiment_id"],
+            subject=subject,
+            content=content,
         )
         log_event(logger, "sent", email_id=email_id)
         log_event(logger, "done", email_id=email_id, lead_id=lead["lead_id"])
