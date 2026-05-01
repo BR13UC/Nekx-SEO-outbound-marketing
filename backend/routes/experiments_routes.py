@@ -95,7 +95,7 @@ def experiments_options(db=Db) -> dict:
             "SELECT DISTINCT language FROM ab_test_variants WHERE language IS NOT NULL AND language != '' ORDER BY language"
         ).fetchall()
     ]
-    default_languages = ["en", "fr", "nl"]
+    default_languages = ["en", "fr", "nl", "de"]
     return {
         "segments": segments,
         "messaging_angles": list(dict.fromkeys(default_angles + messaging_angles)),

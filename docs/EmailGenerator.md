@@ -23,6 +23,8 @@ Fallback behavior:
 - compliance elements included:
   - sender identity
   - unsubscribe path/instruction
+- Gemini responses may be wrapped in fenced JSON; the parser stores only the extracted subject and body.
+- Malformed or truncated Gemini JSON falls back to a safe plain-text email instead of storing raw JSON.
 
 ## Guardrails
 - no fabricated technical findings

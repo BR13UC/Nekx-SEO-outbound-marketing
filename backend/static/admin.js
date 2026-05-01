@@ -9,6 +9,14 @@ const state = {
   cronSnapshot: null,
   flashTimer: null,
   expandedLeadId: null,
+  expandedAbTestId: null,
+};
+
+const AB_DIMENSION_FIELDS = {
+  messaging_angle: { label: "Angle", a: "ab-angle-a", common: "ab-angle-common", b: "ab-angle-b" },
+  email_format: { label: "Format", a: "ab-format-a", common: "ab-format-common", b: "ab-format-b" },
+  subject_variant: { label: "Subject", a: "ab-subject-a", common: "ab-subject-common", b: "ab-subject-b" },
+  language: { label: "Language", a: "ab-language-a", common: "ab-language-common", b: "ab-language-b" },
 };
 
 const $ = (id) => document.getElementById(id);
@@ -74,16 +82,23 @@ function setTab(tab) {
 }
 
 async function loadSegments() {
-  const segments = await api("/leads/segments");
-  const sources = await api("/leads/sources");
+  const [segments, sources, countries] = await Promise.all([
+    api("/leads/segments"),
+    api("/leads/sources"),
+    api("/leads/countries"),
+  ]);
   const select = $("filter-segment");
   const list = $("segments-list");
   const sourceList = $("sources-list");
   const expSegment = $("ab-segment");
+  const expCountry = $("ab-country");
   select.innerHTML = `<option value="">All segments</option>${segments.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}`;
   list.innerHTML = segments.map((s) => `<option value="${esc(s)}"></option>`).join("");
   if (expSegment) {
     expSegment.innerHTML = `<option value="">Select segment</option>${segments.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}`;
+  }
+  if (expCountry) {
+    expCountry.innerHTML = `<option value="">Select country</option>${countries.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}`;
   }
   const sourceDefaults = ["website", "manual", "import", "referral", "linkedin", "other"];
   const allSources = [...new Set([...sourceDefaults, ...sources])];
@@ -95,12 +110,16 @@ async function loadExperimentOptions() {
   const angles = opts.messaging_angles || [];
   const formats = opts.email_formats || [];
   const languages = opts.languages || [];
-  $("ab-angle-a").innerHTML = `<option value="">Select messaging angle</option>${angles.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}`;
-  $("ab-angle-b").innerHTML = `<option value="">Select messaging angle</option>${angles.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}`;
-  $("ab-format-a").innerHTML = `<option value="">Select email format</option>${formats.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}`;
-  $("ab-format-b").innerHTML = `<option value="">Select email format</option>${formats.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}`;
-  $("ab-language-a").innerHTML = `<option value="">Select language</option>${languages.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}`;
-  $("ab-language-b").innerHTML = `<option value="">Select language</option>${languages.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}`;
+  ["ab-angle-a", "ab-angle-common", "ab-angle-b"].forEach((id) => {
+    $(id).innerHTML = `<option value="">Select messaging angle</option>${angles.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}`;
+  });
+  ["ab-format-a", "ab-format-common", "ab-format-b"].forEach((id) => {
+    $(id).innerHTML = `<option value="">Select email format</option>${formats.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}`;
+  });
+  ["ab-language-a", "ab-language-common", "ab-language-b"].forEach((id) => {
+    $(id).innerHTML = `<option value="">Select language</option>${languages.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("")}`;
+  });
+  syncAbDimensionLayout();
 }
 
 async function loadOverview() {
@@ -232,6 +251,226 @@ function syncLeadSortButtons() {
   });
 }
 
+function renderAbVariant(v) {
+  return `
+    <div class="detail-column">
+      <h3>Variant ${esc(v.side)}</h3>
+      <dl class="detail-list">
+        <dt>Angle</dt><dd>${esc(v.messaging_angle)}</dd>
+        <dt>Format</dt><dd>${esc(v.email_format)}</dd>
+        <dt>Subject</dt><dd>${esc(v.subject_variant || "-")}</dd>
+        <dt>Language</dt><dd>${esc(v.language || "en")}</dd>
+      </dl>
+    </div>
+  `;
+}
+
+function stripEmailCodeFence(value) {
+  const text = String(value || "").trim();
+  return text
+    .replace(/^```[a-z0-9_-]*\s*/i, "")
+    .replace(/\s*```\s*$/i, "")
+    .trim();
+}
+
+function parseEmailJson(value) {
+  const cleaned = stripEmailCodeFence(value);
+  const candidates = [cleaned];
+  const objectStart = cleaned.indexOf("{");
+  const objectEnd = cleaned.lastIndexOf("}");
+  if (objectStart !== -1 && objectEnd > objectStart) {
+    candidates.push(cleaned.slice(objectStart, objectEnd + 1));
+  }
+
+  for (const candidate of candidates) {
+    try {
+      const parsed = JSON.parse(candidate);
+      if (parsed && typeof parsed === "object") return parsed;
+    } catch {
+      // Try the next shape.
+    }
+  }
+  return null;
+}
+
+function decodeJsonishString(value) {
+  let text = String(value || "").trim();
+  text = text.replace(/\s*```\s*$/i, "").trim();
+  text = text.replace(/\s*}\s*$/i, "").trim();
+  text = text.replace(/\s*,\s*$/i, "").trim();
+  text = text.replace(/^"/, "").replace(/"$/, "").trim();
+  return text
+    .replace(/\\n/g, "\n")
+    .replace(/\\r/g, "\r")
+    .replace(/\\t/g, "\t")
+    .replace(/\\"/g, '"')
+    .replace(/\\\\/g, "\\")
+    .trim();
+}
+
+function extractJsonishField(cleaned, field) {
+  const pattern =
+    field === "subject"
+      ? /"subject"\s*:\s*"([\s\S]*?)"\s*,\s*"body"/i
+      : /"body"\s*:\s*"([\s\S]*)/i;
+  const match = cleaned.match(pattern);
+  return match ? decodeJsonishString(match[1]) : "";
+}
+
+function isJsonishEmailContent(cleaned) {
+  return cleaned.startsWith("{") || /"subject"\s*:/.test(cleaned) || /"body"\s*:/.test(cleaned);
+}
+
+function countSubstring(value, pattern) {
+  return (String(value || "").match(pattern) || []).length;
+}
+
+function isEmailBodyIncomplete(body) {
+  const value = String(body || "").trim();
+  return value.length > 0 && (value.length < 60 || countSubstring(value, /\[/g) > countSubstring(value, /\]/g));
+}
+
+function getEmailTextParts(email) {
+  const fallbackSubject = email.subject || "-";
+  const rawBody = stripEmailCodeFence(email.content || "");
+  const parsed = parseEmailJson(email.content || "");
+  if (parsed) {
+    const body = parsed.body || rawBody;
+    return {
+      subject: parsed.subject || fallbackSubject,
+      body,
+      incomplete: isEmailBodyIncomplete(body),
+    };
+  }
+  if (isJsonishEmailContent(rawBody)) {
+    const body = extractJsonishField(rawBody, "body") || rawBody;
+    return {
+      subject: extractJsonishField(rawBody, "subject") || fallbackSubject,
+      body,
+      incomplete: true,
+    };
+  }
+  return { subject: fallbackSubject, body: rawBody, incomplete: false };
+}
+
+function renderAbEmail(email) {
+  const text = getEmailTextParts(email);
+  return `
+    <tr class="clickable-row email-summary-row" data-email-open="${email.email_id}">
+      <td class="mono">${email.email_id}</td>
+      <td>${esc(email.ab_side || "-")}</td>
+      <td>${esc(email.company)}<span class="hint mono" style="display:block;margin:0">#${email.lead_id} · ${esc(email.contact_email)}</span></td>
+      <td>${esc(email.delivery_status)}<span class="hint" style="display:block;margin:0">Created ${fmt(email.created_at)} · Sent ${fmt(email.sent_at)}</span></td>
+      <td>${esc(text.subject)}</td>
+      <td>${email.event_count} events<span class="hint" style="display:block;margin:0">${email.reply_count} replies</span></td>
+    </tr>
+    <tr class="email-detail-row" id="email-expand-${email.email_id}" style="display:none">
+      <td colspan="6">
+        <div class="email-detail-panel">
+          <div class="email-detail-meta">
+            <span>${esc(email.company)}</span>
+            <span class="mono">${esc(email.contact_email)}</span>
+            <span>Side ${esc(email.ab_side || "-")}</span>
+            <span>${esc(email.delivery_status)}</span>
+          </div>
+          <h4>${esc(text.subject)}</h4>
+          ${text.incomplete ? '<p class="email-warning">Content appears incomplete. The stored email was truncated before the full body was saved.</p>' : ""}
+          <pre class="email-body">${esc(text.body || "-")}</pre>
+        </div>
+      </td>
+    </tr>
+  `;
+}
+
+function bindAbEmailRows(detailId) {
+  const wrap = document.getElementById(`ab-detail-${detailId}`);
+  if (!wrap) return;
+  wrap.querySelectorAll("[data-email-open]").forEach((row) => {
+    row.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const id = row.getAttribute("data-email-open");
+      const detailRow = document.getElementById(`email-expand-${id}`);
+      if (!detailRow) return;
+
+      const isOpen = detailRow.style.display !== "none";
+      wrap.querySelectorAll(".email-detail-row.is-open").forEach((openRow) => {
+        if (openRow !== detailRow) {
+          openRow.style.display = "none";
+          openRow.classList.remove("is-open");
+        }
+      });
+      wrap.querySelectorAll(".email-summary-row.active").forEach((openRow) => {
+        if (openRow !== row) openRow.classList.remove("active");
+      });
+
+      detailRow.style.display = isOpen ? "none" : "";
+      detailRow.classList.toggle("is-open", !isOpen);
+      row.classList.toggle("active", !isOpen);
+    });
+  });
+}
+
+function renderAbTestDetails(detail) {
+  const test = detail.ab_test;
+  const r = detail.results;
+  const emails = detail.emails || [];
+  return `
+    <div class="ab-detail-grid">
+      <div class="detail-column">
+        <h3>Definition</h3>
+        <dl class="detail-list">
+          <dt>Name</dt><dd>${esc(test.name)}</dd>
+          <dt>Segment</dt><dd>${esc(test.segment)}</dd>
+          <dt>Country</dt><dd>${esc(test.country)}</dd>
+          <dt>Mode</dt><dd>${esc(test.comparison_mode)}</dd>
+          <dt>Dimensions</dt><dd>${esc((test.changed_dimensions || []).join(", "))}</dd>
+          <dt>Caps</dt><dd>${test.max_emails_total} total · ${test.max_emails_a} A · ${test.max_emails_b} B</dd>
+          <dt>Active</dt><dd>${Number(test.active) === 1 ? "true" : "false"}</dd>
+        </dl>
+      </div>
+      ${(detail.variants || []).map(renderAbVariant).join("")}
+    </div>
+    <div class="ab-metrics">
+      <span>Written ${r.written_a}/${r.written_b}</span>
+      <span>Sent ${r.sent_a}/${r.sent_b}</span>
+      <span>Opened ${r.opened_a}/${r.opened_b}</span>
+      <span>Replied ${r.replied_a}/${r.replied_b}</span>
+      <span>Reply rate ${Math.round((r.reply_rate_a || 0) * 100)}% / ${Math.round((r.reply_rate_b || 0) * 100)}%</span>
+      <span>Winner ${esc(r.winner_side)}</span>
+    </div>
+    <h3 class="detail-heading">Emails</h3>
+    <table class="detail-table">
+      <thead><tr><th>ID</th><th>Side</th><th>Lead</th><th>Status</th><th>Subject</th><th>Events</th></tr></thead>
+      <tbody>
+        ${emails.length ? emails.map(renderAbEmail).join("") : '<tr><td colspan="6">No emails generated for this A/B test yet.</td></tr>'}
+      </tbody>
+    </table>
+  `;
+}
+
+async function toggleAbTestDetails(id) {
+  if (state.expandedAbTestId && state.expandedAbTestId !== id) {
+    const prev = document.getElementById(`ab-expand-${state.expandedAbTestId}`);
+    if (prev) prev.style.display = "none";
+  }
+  const row = document.getElementById(`ab-expand-${id}`);
+  const wrap = document.getElementById(`ab-detail-${id}`);
+  if (!row || !wrap) return;
+  const isOpen = row.style.display !== "none";
+  row.style.display = isOpen ? "none" : "";
+  state.expandedAbTestId = isOpen ? null : id;
+  if (isOpen) return;
+
+  wrap.innerHTML = '<p class="hint">Loading A/B test details...</p>';
+  try {
+    const detail = await api(`/ab-tests/${id}/details`);
+    wrap.innerHTML = renderAbTestDetails(detail);
+    bindAbEmailRows(id);
+  } catch (e) {
+    wrap.innerHTML = `<p class="hint">${esc(e.message)}</p>`;
+  }
+}
+
 async function loadLeads() {
   const { limit, offset, sort_by, sort_order } = state.leads;
   const leads = await api(
@@ -358,7 +597,7 @@ async function loadExperiments() {
   );
   $("exp-rows").innerHTML = rows.length
     ? rows.map(({ e, r }) => `
-      <tr>
+      <tr class="clickable-row" data-ab-open="${e.ab_test_id}">
         <td>${e.ab_test_id}</td>
         <td>${esc(e.name)}</td>
         <td>${esc(e.segment)}</td>
@@ -369,12 +608,23 @@ async function loadExperiments() {
         <td>${esc(r.winner_side)}</td>
         <td>${Number(e.active) === 1 ? "true" : "false"}</td>
       </tr>
+      <tr id="ab-expand-${e.ab_test_id}" style="display:none">
+        <td colspan="9">
+          <div class="lead-detail-wrap ab-detail-wrap" id="ab-detail-${e.ab_test_id}">
+            <p class="hint">Loading A/B test details...</p>
+          </div>
+        </td>
+      </tr>
     `).join("")
     : '<tr><td colspan="9">No A/B tests yet.</td></tr>';
   const page = Math.floor(offset / limit) + 1;
   $("exp-page").textContent = `Page ${page}`;
   $("exp-prev").disabled = offset === 0;
   $("exp-next").disabled = rows.length < limit;
+  state.expandedAbTestId = null;
+  document.querySelectorAll("[data-ab-open]").forEach((row) => {
+    row.addEventListener("click", () => toggleAbTestDetails(row.getAttribute("data-ab-open")));
+  });
 }
 
 async function loadActivity() {
@@ -489,34 +739,114 @@ async function createLead() {
   }
 }
 
+function getSelectedChangedDimensions() {
+  return Array.from(document.querySelectorAll('input[name="ab-dimension"]:checked')).map((el) => el.value);
+}
+
+function setMatrixFieldVisible(id, visible) {
+  $(id).closest(".matrix-field").hidden = !visible;
+}
+
+function isDimensionSplit(dimension) {
+  const field = AB_DIMENSION_FIELDS[dimension];
+  return $(field.common).closest(".matrix-field").hidden;
+}
+
+function syncAbDimensionLayout() {
+  const selected = new Set(getSelectedChangedDimensions());
+  for (const [dimension, field] of Object.entries(AB_DIMENSION_FIELDS)) {
+    const wasSplit = isDimensionSplit(dimension);
+    const isSplit = selected.has(dimension);
+
+    if (isSplit && !wasSplit) {
+      $(field.a).value = $(field.common).value;
+      $(field.b).value = $(field.common).value;
+    }
+    if (!isSplit && wasSplit) {
+      $(field.common).value = $(field.a).value;
+    }
+
+    setMatrixFieldVisible(field.a, isSplit);
+    setMatrixFieldVisible(field.common, !isSplit);
+    setMatrixFieldVisible(field.b, isSplit);
+  }
+}
+
+function matrixValue(id, fallback = null) {
+  const value = $(id).value.trim();
+  return value || fallback;
+}
+
+function getAbVariantPayload(side, changedDimensions) {
+  const selected = new Set(changedDimensions);
+  const role = side.toLowerCase();
+  const payload = {};
+
+  for (const [dimension, field] of Object.entries(AB_DIMENSION_FIELDS)) {
+    const id = selected.has(dimension) ? field[role] : field.common;
+    payload[dimension] = dimension === "subject_variant" ? matrixValue(id) : matrixValue(id, dimension === "language" ? "en" : "");
+  }
+
+  return payload;
+}
+
+function getActualChangedDimensions(payload) {
+  return Object.keys(AB_DIMENSION_FIELDS).filter(
+    (dimension) => payload.variant_a[dimension] !== payload.variant_b[dimension]
+  );
+}
+
+function validateAbChangedDimensions(payload) {
+  if (!payload.changed_dimensions.length) {
+    throw new Error("Select at least one changed dimension.");
+  }
+
+  const selected = new Set(payload.changed_dimensions);
+  const actual = getActualChangedDimensions(payload);
+  const missing = payload.changed_dimensions.filter((dimension) => !actual.includes(dimension));
+  const unexpected = actual.filter((dimension) => !selected.has(dimension));
+
+  if (missing.length) {
+    const labels = missing.map((dimension) => AB_DIMENSION_FIELDS[dimension].label).join(", ");
+    throw new Error(`Selected dimensions must differ between A and B: ${labels}.`);
+  }
+  if (unexpected.length) {
+    const labels = unexpected.map((dimension) => AB_DIMENSION_FIELDS[dimension].label).join(", ");
+    throw new Error(`Only selected dimensions may differ between A and B: ${labels}.`);
+  }
+}
+
+function resetAbTestForm() {
+  [
+    "ab-name","ab-segment","ab-country","ab-mode","ab-max-emails",
+    "ab-angle-common","ab-format-common","ab-subject-common","ab-language-common",
+    "ab-angle-a","ab-format-a","ab-subject-a","ab-language-a",
+    "ab-angle-b","ab-format-b","ab-subject-b","ab-language-b",
+  ].forEach((id) => ($(id).value = ""));
+  document.querySelectorAll('input[name="ab-dimension"]').forEach((el) => {
+    el.checked = el.value === "messaging_angle";
+  });
+  $("exp-active").value = "true";
+  syncAbDimensionLayout();
+}
+
 async function createExperiment() {
   const btn = $("exp-create");
   btn.disabled = true;
   clearFlash();
   try {
+    syncAbDimensionLayout();
+    const changedDimensions = getSelectedChangedDimensions();
     const payload = {
       name: $("ab-name").value.trim(),
       segment: $("ab-segment").value.trim(),
       country: $("ab-country").value.trim(),
       comparison_mode: $("ab-mode").value.trim(),
-      changed_dimensions: $("ab-dimensions").value
-        .split(",")
-        .map((v) => v.trim())
-        .filter(Boolean),
+      changed_dimensions: changedDimensions,
       max_emails_total: Number($("ab-max-emails").value),
       active: $("exp-active").value === "true",
-      variant_a: {
-        messaging_angle: $("ab-angle-a").value.trim(),
-        email_format: $("ab-format-a").value.trim(),
-        subject_variant: $("ab-subject-a").value.trim() || null,
-        language: $("ab-language-a").value.trim() || "en",
-      },
-      variant_b: {
-        messaging_angle: $("ab-angle-b").value.trim(),
-        email_format: $("ab-format-b").value.trim(),
-        subject_variant: $("ab-subject-b").value.trim() || null,
-        language: $("ab-language-b").value.trim() || "en",
-      },
+      variant_a: getAbVariantPayload("A", changedDimensions),
+      variant_b: getAbVariantPayload("B", changedDimensions),
     };
     if (
       !payload.name ||
@@ -531,14 +861,10 @@ async function createExperiment() {
     ) {
       throw new Error("Name, segment, country, mode, max_emails_total and both variants are required.");
     }
+    validateAbChangedDimensions(payload);
     await api("/ab-tests", { method: "POST", body: JSON.stringify(payload) });
     flash("A/B test created.");
-    [
-      "ab-name","ab-segment","ab-country","ab-mode","ab-dimensions","ab-max-emails",
-      "ab-angle-a","ab-format-a","ab-subject-a","ab-language-a",
-      "ab-angle-b","ab-format-b","ab-subject-b","ab-language-b",
-    ].forEach((id) => ($(id).value = ""));
-    $("exp-active").value = "true";
+    resetAbTestForm();
     state.experiments.offset = 0;
     await Promise.all([loadExperiments(), loadSegments(), loadOverview()]);
   } catch (e) {
@@ -595,6 +921,9 @@ function bindEvents() {
   });
 
   $("exp-create").addEventListener("click", createExperiment);
+  document.querySelectorAll('input[name="ab-dimension"]').forEach((el) => {
+    el.addEventListener("change", syncAbDimensionLayout);
+  });
   $("exp-refresh").addEventListener("click", loadExperiments);
   $("exp-prev").addEventListener("click", async () => {
     state.experiments.offset = Math.max(0, state.experiments.offset - state.experiments.limit);

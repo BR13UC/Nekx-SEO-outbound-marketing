@@ -180,3 +180,54 @@ def get_ab_test_results(ab_test_id: int, db=Db):
         raise HTTPException(status_code=404, detail="ab test not found")
     return _compute_results(db, ab_test_id)
 
+
+@router.get("/ab-tests/{ab_test_id}/details")
+def get_ab_test_details(ab_test_id: int, db=Db) -> dict:
+    row = db.execute("SELECT * FROM ab_tests WHERE ab_test_id = ?", (ab_test_id,)).fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail="ab test not found")
+
+    ab_test = row_to_dict(row)
+    ab_test["changed_dimensions"] = json.loads(ab_test["changed_dimensions"])
+    variants = [
+        row_to_dict(r)
+        for r in db.execute(
+            """
+            SELECT *
+            FROM ab_test_variants
+            WHERE ab_test_id = ?
+            ORDER BY CASE side WHEN 'A' THEN 1 WHEN 'B' THEN 2 ELSE 3 END
+            """,
+            (ab_test_id,),
+        ).fetchall()
+    ]
+    emails = [
+        row_to_dict(r)
+        for r in db.execute(
+            """
+            SELECT
+              ev.email_id,
+              ev.ab_side,
+              ev.lead_id,
+              l.company,
+              l.contact_email,
+              l.segment,
+              ev.subject,
+              ev.content,
+              ev.delivery_status,
+              ev.created_at,
+              ev.sent_at,
+              COUNT(DISTINCT ee.event_id) AS event_count,
+              COUNT(DISTINCT replies.reply_id) AS reply_count
+            FROM email_variants ev
+            JOIN leads l ON l.lead_id = ev.lead_id
+            LEFT JOIN email_events ee ON ee.email_id = ev.email_id
+            LEFT JOIN replies ON replies.email_id = ev.email_id
+            WHERE ev.ab_test_id = ?
+            GROUP BY ev.email_id
+            ORDER BY ev.created_at DESC, ev.email_id DESC
+            """,
+            (ab_test_id,),
+        ).fetchall()
+    ]
+    return {"ab_test": ab_test, "variants": variants, "results": _compute_results(db, ab_test_id), "emails": emails}

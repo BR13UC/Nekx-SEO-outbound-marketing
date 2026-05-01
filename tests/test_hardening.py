@@ -250,3 +250,147 @@ def test_migration_dedupes_and_creates_unique_index(tmp_path):
     assert any("idx_leads_unique_contact_website" in idx["name"] for idx in indexes)
 
     conn.close()
+
+
+def test_migration_repairs_email_child_foreign_keys_from_renamed_parent(tmp_path):
+    db_path = tmp_path / "broken_fk_migration.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = OFF;")
+
+    conn.executescript(
+        """
+        CREATE TABLE leads (
+          lead_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          company TEXT NOT NULL,
+          contact_email TEXT NOT NULL,
+          website TEXT NOT NULL,
+          segment TEXT NOT NULL,
+          industry TEXT,
+          country TEXT,
+          source TEXT,
+          created_at TEXT NOT NULL,
+          status TEXT NOT NULL
+        );
+        CREATE TABLE seo_insights (
+          insight_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          lead_id INTEGER NOT NULL,
+          issue_type TEXT NOT NULL,
+          issue_description TEXT NOT NULL,
+          severity INTEGER NOT NULL,
+          created_at TEXT NOT NULL,
+          FOREIGN KEY (lead_id) REFERENCES leads(lead_id) ON DELETE CASCADE
+        );
+        CREATE TABLE experiments (
+          experiment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          segment TEXT NOT NULL,
+          messaging_angle TEXT NOT NULL,
+          email_format TEXT NOT NULL,
+          max_emails_total INTEGER,
+          subject_variant TEXT,
+          created_at TEXT NOT NULL,
+          active INTEGER NOT NULL
+        );
+        CREATE TABLE email_variants (
+          email_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          lead_id INTEGER NOT NULL,
+          experiment_id INTEGER,
+          ab_test_id INTEGER,
+          ab_side TEXT,
+          subject TEXT NOT NULL,
+          content TEXT NOT NULL,
+          delivery_status TEXT NOT NULL DEFAULT 'ready',
+          created_at TEXT NOT NULL,
+          sent_at TEXT,
+          FOREIGN KEY (lead_id) REFERENCES leads(lead_id) ON DELETE CASCADE,
+          FOREIGN KEY (experiment_id) REFERENCES experiments(experiment_id) ON DELETE CASCADE,
+          FOREIGN KEY (ab_test_id) REFERENCES ab_tests(ab_test_id) ON DELETE SET NULL
+        );
+        CREATE TABLE email_events (
+          event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          email_id INTEGER NOT NULL,
+          event_type TEXT NOT NULL,
+          provider_id TEXT,
+          event_time TEXT NOT NULL,
+          FOREIGN KEY (email_id) REFERENCES "email_variants_old"(email_id) ON DELETE CASCADE
+        );
+        CREATE TABLE replies (
+          reply_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          email_id INTEGER NOT NULL,
+          lead_id INTEGER NOT NULL,
+          reply_text TEXT NOT NULL,
+          sentiment TEXT,
+          created_at TEXT NOT NULL,
+          FOREIGN KEY (email_id) REFERENCES "email_variants_old"(email_id) ON DELETE CASCADE,
+          FOREIGN KEY (lead_id) REFERENCES leads(lead_id) ON DELETE CASCADE
+        );
+        """
+    )
+    now = "2026-05-01T00:00:00+00:00"
+    conn.execute(
+        """
+        INSERT INTO leads (company, contact_email, website, segment, created_at, status)
+        VALUES ('A', 'a@example.com', 'https://example.com', 'food', ?, 'written')
+        """,
+        (now,),
+    )
+    conn.execute(
+        """
+        INSERT INTO experiments (segment, messaging_angle, email_format, created_at, active)
+        VALUES ('food', 'local_visibility', 'short', ?, 1)
+        """,
+        (now,),
+    )
+    conn.execute(
+        """
+        INSERT INTO email_variants (
+          lead_id, experiment_id, subject, content, delivery_status, created_at, sent_at
+        )
+        VALUES (1, 1, 'subject', 'content', 'ready', ?, NULL)
+        """,
+        (now,),
+    )
+    conn.execute(
+        """
+        INSERT INTO email_events (email_id, event_type, provider_id, event_time)
+        VALUES (1, 'ready', NULL, ?)
+        """,
+        (now,),
+    )
+    conn.execute(
+        """
+        INSERT INTO replies (email_id, lead_id, reply_text, sentiment, created_at)
+        VALUES (1, 1, 'hello', NULL, ?)
+        """,
+        (now,),
+    )
+    conn.commit()
+    conn.execute("PRAGMA foreign_keys = ON;")
+
+    database_module._run_migrations(conn)
+    conn.commit()
+
+    event_fks = conn.execute("PRAGMA foreign_key_list(email_events)").fetchall()
+    reply_fks = conn.execute("PRAGMA foreign_key_list(replies)").fetchall()
+
+    assert any(r["table"] == "email_variants" for r in event_fks)
+    assert not any(r["table"] == "email_variants_old" for r in event_fks)
+    assert any(r["table"] == "email_variants" for r in reply_fks)
+    assert not any(r["table"] == "email_variants_old" for r in reply_fks)
+
+    conn.execute(
+        """
+        INSERT INTO email_events (email_id, event_type, provider_id, event_time)
+        VALUES (1, 'ready', NULL, ?)
+        """,
+        (now,),
+    )
+    conn.commit()
+
+    event_count = conn.execute("SELECT COUNT(*) AS n FROM email_events").fetchone()["n"]
+    reply_count = conn.execute("SELECT COUNT(*) AS n FROM replies").fetchone()["n"]
+    assert event_count == 2
+    assert reply_count == 1
+    assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
+
+    conn.close()

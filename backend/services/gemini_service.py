@@ -90,21 +90,24 @@ Return STRICT JSON with this schema only:
     def _parse_response(self, raw_text: str, company: str) -> tuple[str, str]:
         text = (raw_text or "").strip()
         if not text:
-            return (f"Quick SEO growth idea for {company}", "Hi,\n\nCould we share a quick SEO growth idea?")
+            return self._fallback_email(company)
 
-        try:
-            parsed = json.loads(text)
+        cleaned = self._strip_code_fence(text)
+        parsed = self._load_json_object(cleaned)
+        if parsed is not None:
             subject = str(parsed.get("subject") or "").strip()
             body = str(parsed.get("body") or "").strip()
-            if subject and body:
+            if subject and self._is_usable_body(body):
                 return subject, body
-        except Exception:
-            pass
+            return self._fallback_email(company)
+
+        if cleaned != text or cleaned.lstrip().startswith("{"):
+            return self._fallback_email(company)
 
         subject = ""
         body_lines: list[str] = []
         in_body = False
-        for line in text.splitlines():
+        for line in cleaned.splitlines():
             upper = line.upper().strip()
             if upper.startswith("SUBJECT:"):
                 subject = line.split(":", 1)[1].strip().strip('"')
@@ -115,7 +118,54 @@ Return STRICT JSON with this schema only:
             if in_body:
                 body_lines.append(line)
 
-        body = "\n".join(body_lines).strip() if body_lines else text
+        body = "\n".join(body_lines).strip() if body_lines else cleaned
         if not subject:
             subject = f"Quick SEO growth idea for {company}"
         return subject, body
+
+    @staticmethod
+    def _strip_code_fence(raw_text: str) -> str:
+        text = (raw_text or "").strip()
+        if not text.startswith("```"):
+            return text
+
+        lines = text.splitlines()
+        if lines and lines[0].strip().startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        return "\n".join(lines).strip()
+
+    @staticmethod
+    def _load_json_object(text: str) -> dict[str, Any] | None:
+        candidates = [text]
+        object_start = text.find("{")
+        object_end = text.rfind("}")
+        if object_start != -1 and object_end > object_start:
+            candidates.append(text[object_start : object_end + 1])
+
+        for candidate in candidates:
+            try:
+                parsed = json.loads(candidate)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(parsed, dict):
+                return parsed
+        return None
+
+    @staticmethod
+    def _is_usable_body(body: str) -> bool:
+        value = (body or "").strip()
+        if len(value) < 60:
+            return False
+        if value.count("[") > value.count("]"):
+            return False
+        return True
+
+    @staticmethod
+    def _fallback_email(company: str) -> tuple[str, str]:
+        return (
+            f"Quick SEO growth idea for {company}",
+            "Hi,\n\nCould we share a quick SEO growth idea based on comparable client cases?\n\n"
+            "Best,\nNekx SEO\n\nUnsubscribe: reply with \"unsubscribe\" and I will not contact you again.",
+        )

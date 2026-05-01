@@ -19,6 +19,24 @@ The platform is designed for attribution: generated emails are linked to lead an
 - Admin panel: one-page operations UI at `/admin`.
 
 ## Quick Start
+### Docker quick start
+```bash
+docker compose up --build
+```
+
+Then open:
+```text
+http://127.0.0.1:8000/admin
+```
+
+Docker keeps SQLite and scheduler data persistent by mounting `./data` into the container at `/app/data`. Docker Compose automatically reads a local `.env` file for values such as `GOOGLE_API_KEY`; do not commit secrets.
+
+Run one outbound cycle from the container:
+```bash
+docker compose exec app python -m backend.tools.run_outbound_cycle
+```
+
+### Local Python quick start
 ### 1) Create virtual environment
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
@@ -83,6 +101,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/emails/send \
 - `PATCH /leads/{lead_id}`
 - `GET /leads/segments`
 - `GET /leads/sources`
+- `GET /leads/countries`
 - `POST /seo/analyze`
 - `GET /seo/{lead_id}`
 - `POST /experiments`
@@ -92,6 +111,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/emails/send \
 - `POST /ab-tests`
 - `GET /ab-tests`
 - `GET /ab-tests/{ab_test_id}/results`
+- `GET /ab-tests/{ab_test_id}/details`
 - `POST /emails/generate`
 - `GET /emails/{email_id}`
 - `POST /emails/send`

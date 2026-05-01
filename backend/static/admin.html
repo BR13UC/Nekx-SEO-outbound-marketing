@@ -184,23 +184,44 @@
               <div class="form-grid">
                 <div class="field"><label>Name*</label><input id="ab-name" /></div>
                 <div class="field"><label>Segment*</label><select id="ab-segment"><option value="">Select segment</option></select></div>
-                <div class="field"><label>Country*</label><input id="ab-country" placeholder="NL" /></div>
+                <div class="field"><label>Country*</label><select id="ab-country"><option value="">Select country</option></select></div>
                 <div class="field"><label>Comparison mode*</label><input id="ab-mode" placeholder="angle_only / custom" /></div>
-                <div class="field"><label>Changed dimensions*</label><input id="ab-dimensions" placeholder="messaging_angle,email_format" /></div>
                 <div class="field"><label>Max emails (total)*</label><input id="ab-max-emails" type="number" min="1" step="1" /></div>
                 <div class="field"><label>Active</label><select id="exp-active"><option value="true">true</option><option value="false">false</option></select></div>
+                <div class="field full">
+                  <label>Changed dimensions*</label>
+                  <div class="dimension-options" id="ab-dimensions">
+                    <label class="dimension-option"><input type="checkbox" name="ab-dimension" value="messaging_angle" checked /> Angle</label>
+                    <label class="dimension-option"><input type="checkbox" name="ab-dimension" value="email_format" /> Format</label>
+                    <label class="dimension-option"><input type="checkbox" name="ab-dimension" value="subject_variant" /> Subject</label>
+                    <label class="dimension-option"><input type="checkbox" name="ab-dimension" value="language" /> Language</label>
+                  </div>
+                  <p class="hint">Only selected dimensions may differ between Variant A and Variant B.</p>
+                </div>
 
-                <div class="full"><h2 style="margin:8px 0 0">Variant A</h2></div>
-                <div class="field"><label>Angle A*</label><select id="ab-angle-a"><option value="">Select messaging angle</option></select></div>
-                <div class="field"><label>Format A*</label><select id="ab-format-a"><option value="">Select email format</option></select></div>
-                <div class="field"><label>Subject A</label><input id="ab-subject-a" /></div>
-                <div class="field"><label>Language A</label><select id="ab-language-a"><option value="">Select language</option></select></div>
-
-                <div class="full"><h2 style="margin:8px 0 0">Variant B</h2></div>
-                <div class="field"><label>Angle B*</label><select id="ab-angle-b"><option value="">Select messaging angle</option></select></div>
-                <div class="field"><label>Format B*</label><select id="ab-format-b"><option value="">Select email format</option></select></div>
-                <div class="field"><label>Subject B</label><input id="ab-subject-b" /></div>
-                <div class="field"><label>Language B</label><select id="ab-language-b"><option value="">Select language</option></select></div>
+                <div class="variant-matrix full">
+                  <div class="variant-column">
+                    <h3>Variant A</h3>
+                    <div class="field matrix-field" data-dimension="messaging_angle" data-role="a"><label>Angle A*</label><select id="ab-angle-a"><option value="">Select messaging angle</option></select></div>
+                    <div class="field matrix-field" data-dimension="email_format" data-role="a"><label>Format A*</label><select id="ab-format-a"><option value="">Select email format</option></select></div>
+                    <div class="field matrix-field" data-dimension="subject_variant" data-role="a"><label>Subject A</label><input id="ab-subject-a" /></div>
+                    <div class="field matrix-field" data-dimension="language" data-role="a"><label>Language A</label><select id="ab-language-a"><option value="">Select language</option></select></div>
+                  </div>
+                  <div class="variant-column common-column">
+                    <h3>Common</h3>
+                    <div class="field matrix-field" data-dimension="messaging_angle" data-role="common"><label>Angle*</label><select id="ab-angle-common"><option value="">Select messaging angle</option></select></div>
+                    <div class="field matrix-field" data-dimension="email_format" data-role="common"><label>Format*</label><select id="ab-format-common"><option value="">Select email format</option></select></div>
+                    <div class="field matrix-field" data-dimension="subject_variant" data-role="common"><label>Subject</label><input id="ab-subject-common" /></div>
+                    <div class="field matrix-field" data-dimension="language" data-role="common"><label>Language</label><select id="ab-language-common"><option value="">Select language</option></select></div>
+                  </div>
+                  <div class="variant-column">
+                    <h3>Variant B</h3>
+                    <div class="field matrix-field" data-dimension="messaging_angle" data-role="b"><label>Angle B*</label><select id="ab-angle-b"><option value="">Select messaging angle</option></select></div>
+                    <div class="field matrix-field" data-dimension="email_format" data-role="b"><label>Format B*</label><select id="ab-format-b"><option value="">Select email format</option></select></div>
+                    <div class="field matrix-field" data-dimension="subject_variant" data-role="b"><label>Subject B</label><input id="ab-subject-b" /></div>
+                    <div class="field matrix-field" data-dimension="language" data-role="b"><label>Language B</label><select id="ab-language-b"><option value="">Select language</option></select></div>
+                  </div>
+                </div>
                 <div class="full"><button class="btn primary" id="exp-create">Create A/B test</button></div>
               </div>
             </div>

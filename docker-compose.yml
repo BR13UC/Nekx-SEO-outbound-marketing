@@ -1,0 +1,17 @@
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      NEKX_DB_PATH: /app/data/nekx.db
+      NEKX_LEADS_XLSX_PATH: /app/data/groningen_food_drink_leads.xlsx
+      NEKX_SCHEDULER_CONFIG_PATH: /app/data/scheduler_config.json
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      NEKX_EMAIL_MODE: ${NEKX_EMAIL_MODE:-gemini}
+      NEKX_EMAIL_FALLBACK_MODE: ${NEKX_EMAIL_FALLBACK_MODE:-fallback}
+      NEKX_GEMINI_MODEL: ${NEKX_GEMINI_MODEL:-gemini-2.5-flash}
+    restart: unless-stopped

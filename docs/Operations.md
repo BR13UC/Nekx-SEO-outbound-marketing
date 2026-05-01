@@ -6,6 +6,18 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -r backend/requirements.txt
 ```
 
+Docker alternative:
+```bash
+docker compose up --build
+```
+
+The admin UI is available at:
+```text
+http://127.0.0.1:8000/admin
+```
+
+Docker mounts `./data` to `/app/data`, so SQLite, imported leads, scheduler config, and scheduler logs stay on the host. Docker Compose reads a local `.env` file automatically for variable interpolation; use it for `GOOGLE_API_KEY` or email mode overrides, and do not commit secrets.
+
 ## 2) Reset DB and Import Leads
 ```bash
 python -m backend.tools.reset_and_import_leads \
@@ -54,6 +66,11 @@ curl -X POST http://127.0.0.1:8000/api/v1/emails/send \
 Live mode:
 ```bash
 python -m backend.tools.run_outbound_cycle
+```
+
+Inside Docker:
+```bash
+docker compose exec app python -m backend.tools.run_outbound_cycle
 ```
 
 Dry run:
@@ -110,12 +127,14 @@ Common lead/experiment helpers:
 ```bash
 curl 'http://127.0.0.1:8000/api/v1/leads/segments'
 curl 'http://127.0.0.1:8000/api/v1/leads/sources'
+curl 'http://127.0.0.1:8000/api/v1/leads/countries'
 curl 'http://127.0.0.1:8000/api/v1/experiments/options'
 ```
 
 Notes:
 - `start_date` / `end_date` format: `YYYY-MM-DD`
 - sent metrics use `delivery_status='sent'`
+- A/B tests require at least one explicit changed dimension (`messaging_angle`, `email_format`, `subject_variant`, or `language`); dimensions not selected for the test are edited once in the Common column and submitted identically for Variant A and Variant B.
 
 ## 8) Example Cron
 Every minute (actual sending rate controlled by `min_interval_minutes`):
@@ -145,3 +164,11 @@ Symptom:
 Behavior:
 - logs structured `invalid_json_config`
 - skips outreach data writes for that run
+
+### Broken email event foreign keys
+Symptom:
+- scheduler logs `no such table: main.email_variants_old`
+
+Behavior:
+- startup and scheduler migrations repair `email_events` and `replies` foreign keys to reference `email_variants`
+- verify with `sqlite3 data/nekx.db "PRAGMA foreign_key_list(email_events); PRAGMA foreign_key_list(replies); PRAGMA foreign_key_check;"`

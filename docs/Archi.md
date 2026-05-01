@@ -47,6 +47,7 @@ Base prefix: `/api/v1`
 - `PATCH /leads/{lead_id}`
 - `GET /leads/segments`
 - `GET /leads/sources`
+- `GET /leads/countries`
 - `POST /seo/analyze`
 - `GET /seo/{lead_id}`
 
@@ -58,6 +59,7 @@ Base prefix: `/api/v1`
 - `POST /ab-tests`
 - `GET /ab-tests`
 - `GET /ab-tests/{ab_test_id}/results`
+- `GET /ab-tests/{ab_test_id}/details`
 
 ### Email, Webhooks, Analytics, Scheduler
 - `POST /emails/generate`

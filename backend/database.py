@@ -189,6 +189,7 @@ def _run_migrations(conn: sqlite3.Connection) -> None:
     )
 
     _migrate_email_variants_table(conn)
+    _rebuild_email_child_tables(conn)
 
     # Backfill delivery status values.
     conn.execute(
@@ -396,6 +397,68 @@ def _migrate_email_variants_table(conn: sqlite3.Connection) -> None:
         """
     )
     conn.execute("DROP TABLE email_variants_old")
+
+
+def _foreign_key_references_table(conn: sqlite3.Connection, table: str, referenced_table: str) -> bool:
+    rows = conn.execute(f"PRAGMA foreign_key_list({table})").fetchall()
+    return any(r["table"] == referenced_table for r in rows)
+
+
+def _rebuild_email_child_tables(conn: sqlite3.Connection) -> None:
+    if _foreign_key_references_table(conn, "email_events", "email_variants_old"):
+        _rebuild_email_events_table(conn)
+    if _foreign_key_references_table(conn, "replies", "email_variants_old"):
+        _rebuild_replies_table(conn)
+
+
+def _rebuild_email_events_table(conn: sqlite3.Connection) -> None:
+    conn.execute("ALTER TABLE email_events RENAME TO email_events_old")
+    conn.execute(
+        """
+        CREATE TABLE email_events (
+          event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          email_id INTEGER NOT NULL,
+          event_type TEXT NOT NULL,
+          provider_id TEXT,
+          event_time TEXT NOT NULL,
+          FOREIGN KEY (email_id) REFERENCES email_variants(email_id) ON DELETE CASCADE
+        )
+        """
+    )
+    conn.execute(
+        """
+        INSERT INTO email_events (event_id, email_id, event_type, provider_id, event_time)
+        SELECT event_id, email_id, event_type, provider_id, event_time
+        FROM email_events_old
+        """
+    )
+    conn.execute("DROP TABLE email_events_old")
+
+
+def _rebuild_replies_table(conn: sqlite3.Connection) -> None:
+    conn.execute("ALTER TABLE replies RENAME TO replies_old")
+    conn.execute(
+        """
+        CREATE TABLE replies (
+          reply_id INTEGER PRIMARY KEY AUTOINCREMENT,
+          email_id INTEGER NOT NULL,
+          lead_id INTEGER NOT NULL,
+          reply_text TEXT NOT NULL,
+          sentiment TEXT,
+          created_at TEXT NOT NULL,
+          FOREIGN KEY (email_id) REFERENCES email_variants(email_id) ON DELETE CASCADE,
+          FOREIGN KEY (lead_id) REFERENCES leads(lead_id) ON DELETE CASCADE
+        )
+        """
+    )
+    conn.execute(
+        """
+        INSERT INTO replies (reply_id, email_id, lead_id, reply_text, sentiment, created_at)
+        SELECT reply_id, email_id, lead_id, reply_text, sentiment, created_at
+        FROM replies_old
+        """
+    )
+    conn.execute("DROP TABLE replies_old")
 
 
 def get_db() -> Iterator[sqlite3.Connection]:

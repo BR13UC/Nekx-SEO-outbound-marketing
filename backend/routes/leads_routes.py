@@ -105,6 +105,19 @@ def list_lead_sources(db=Db) -> list[str]:
     return [str(r["source"]) for r in rows]
 
 
+@router.get("/leads/countries")
+def list_lead_countries(db=Db) -> list[str]:
+    rows = db.execute(
+        """
+        SELECT DISTINCT country
+        FROM leads
+        WHERE country IS NOT NULL AND country != ''
+        ORDER BY country ASC
+        """
+    ).fetchall()
+    return [str(r["country"]) for r in rows]
+
+
 @router.get("/leads/{lead_id}", response_model=LeadOut)
 def get_lead(lead_id: int, db=Db):
     row = db.execute("SELECT * FROM leads WHERE lead_id = ?", (lead_id,)).fetchone()
