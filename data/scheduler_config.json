@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "min_interval_minutes": 30,
+  "log_level": "INFO",
+  "log_file_path": "data/outbound_scheduler.log"
+}

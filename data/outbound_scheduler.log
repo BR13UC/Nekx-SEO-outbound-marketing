@@ -1,0 +1,434 @@
+2026-04-10T15:09:40Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start"}
+2026-04-10T15:09:40Z | INFO | {"event": "selected_lead", "lead_id": 14, "segment": "bakery_desserts"}
+2026-04-10T15:09:40Z | INFO | {"event": "selected_experiment", "experiment_id": 1}
+2026-04-10T15:09:40Z | INFO | {"count": 1, "event": "insights_ready"}
+2026-04-10T15:09:40Z | INFO | {"dry_run": true, "event": "done", "experiment_id": 1, "lead_id": 14}
+2026-04-10T15:10:43Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start"}
+2026-04-10T15:10:43Z | INFO | {"event": "selected_lead", "lead_id": 14, "segment": "bakery_desserts"}
+2026-04-10T15:10:43Z | INFO | {"event": "selected_experiment", "experiment_id": 1}
+2026-04-10T15:10:43Z | INFO | {"count": 1, "event": "insights_ready"}
+2026-04-10T15:10:43Z | INFO | {"email_id": 2, "event": "generated_email", "experiment_id": 1, "lead_id": 14}
+2026-04-10T15:10:43Z | INFO | {"email_id": 2, "event": "sent"}
+2026-04-10T15:10:43Z | INFO | {"email_id": 2, "event": "done", "lead_id": 14}
+2026-04-10T15:10:44Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start"}
+2026-04-10T15:10:44Z | INFO | {"detail": "next_allowed_at=2026-04-10T15:40:43+00:00", "event": "skip", "reason": "interval_not_reached"}
+2026-04-10T15:12:33Z | INFO | {"detail": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)", "event": "error", "reason": "invalid_json_config"}
+2026-04-10T15:26:46Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start"}
+2026-04-10T15:26:46Z | INFO | {"detail": "next_allowed_at=2026-04-10T15:40:43+00:00", "event": "skip", "reason": "interval_not_reached"}
+2026-04-10T15:31:38Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start"}
+2026-04-10T15:31:38Z | INFO | {"detail": "next_allowed_at=2026-04-10T15:40:43+00:00", "event": "skip", "reason": "interval_not_reached"}
+2026-04-10T15:33:38Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start"}
+2026-04-10T15:33:38Z | INFO | {"event": "throttle_bypassed", "reason": "dry_run"}
+2026-04-10T15:33:38Z | INFO | {"event": "selected_lead", "lead_id": 15, "segment": "bakery_desserts"}
+2026-04-10T15:33:38Z | INFO | {"event": "selected_experiment", "experiment_id": 1}
+2026-04-10T15:33:38Z | INFO | {"count": 1, "event": "insights_ready"}
+2026-04-10T15:33:38Z | INFO | {"dry_run": true, "event": "done", "experiment_id": 1, "lead_id": 15}
+2026-04-10T15:33:54Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start"}
+2026-04-10T15:33:54Z | INFO | {"event": "throttle_bypassed", "reason": "dry_run"}
+2026-04-10T15:33:54Z | INFO | {"event": "selected_lead", "lead_id": 15, "segment": "bakery_desserts"}
+2026-04-10T15:33:54Z | INFO | {"event": "selected_experiment", "experiment_id": 1}
+2026-04-10T15:33:54Z | INFO | {"count": 1, "event": "insights_ready"}
+2026-04-10T15:33:54Z | INFO | {"dry_run": true, "event": "done", "experiment_id": 1, "lead_id": 15}
+2026-04-10T15:43:28Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start"}
+2026-04-10T15:43:28Z | INFO | {"event": "throttle_bypassed", "reason": "dry_run"}
+2026-04-10T15:43:28Z | INFO | {"event": "selected_lead", "lead_id": 23, "segment": "bakery_desserts"}
+2026-04-10T15:43:28Z | INFO | {"event": "selected_experiment", "experiment_id": 1}
+2026-04-10T15:43:28Z | INFO | {"count": 1, "event": "insights_ready"}
+2026-04-10T15:43:28Z | INFO | {"dry_run": true, "event": "done", "experiment_id": 1, "lead_id": 23}
+2026-04-10T15:44:59Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start"}
+2026-04-10T15:44:59Z | INFO | {"event": "throttle_bypassed", "reason": "dry_run"}
+2026-04-10T15:44:59Z | INFO | {"event": "selected_lead", "lead_id": 23, "segment": "bakery_desserts"}
+2026-04-10T15:44:59Z | INFO | {"event": "selected_experiment", "experiment_id": 1}
+2026-04-10T15:44:59Z | INFO | {"count": 1, "event": "insights_ready"}
+2026-04-10T15:44:59Z | INFO | {"content": "Hi Heerlijk Chocolade,\n\nI looked at your market context around https://heerlijkchocolade.nl/ and put together a few opportunities based on comparable client cases:\n- A similar Nekx client (Beauty Institute Amice) saw Homepage visitors improved by +55%. This could be a practical SEO opportunity for Heerlijk Chocolade as well.\n\nIf useful, I can share a short walkthrough with practical next steps and expected impact ranges.\n\nBest,\nNekx SEO\n\nUnsubscribe: reply with \"unsubscribe\" and I will not contact you again.\n", "dry_run": true, "event": "generated_email", "experiment_id": 1, "lead_id": 23, "subject": "Case-based growth idea for bakery_desserts"}
+2026-04-10T15:44:59Z | INFO | {"dry_run": true, "event": "done", "experiment_id": 1, "lead_id": 23}
+2026-04-10T15:45:18Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start"}
+2026-04-10T15:45:18Z | INFO | {"event": "throttle_bypassed", "reason": "dry_run"}
+2026-04-10T15:45:18Z | INFO | {"event": "selected_lead", "lead_id": 23, "segment": "bakery_desserts"}
+2026-04-10T15:45:18Z | INFO | {"event": "selected_experiment", "experiment_id": 1}
+2026-04-10T15:45:18Z | INFO | {"count": 1, "event": "insights_ready"}
+2026-04-10T15:45:19Z | INFO | {"content": "Hi Heerlijk Chocolade,\n\nI looked at your market context around https://heerlijkchocolade.nl/ and put together a few opportunities based on comparable client cases:\n- A similar Nekx client (Dental Care Drenthe) saw Homepage visitors improved by +41%. This could be a practical SEO opportunity for Heerlijk Chocolade as well.\n\nIf useful, I can share a short walkthrough with practical next steps and expected impact ranges.\n\nBest,\nNekx SEO\n\nUnsubscribe: reply with \"unsubscribe\" and I will not contact you again.\n", "dry_run": true, "event": "generated_email", "experiment_id": 1, "lead_id": 23, "subject": "Case-based growth idea for bakery_desserts"}
+2026-04-10T15:45:19Z | INFO | {"dry_run": true, "event": "done", "experiment_id": 1, "lead_id": 23}
+2026-04-10T17:36:46Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start"}
+2026-04-10T17:36:46Z | INFO | {"event": "throttle_bypassed", "reason": "dry_run"}
+2026-04-10T17:36:46Z | INFO | {"event": "selected_lead", "lead_id": 23, "segment": "bakery_desserts"}
+2026-04-10T17:36:46Z | INFO | {"event": "selected_experiment", "experiment_id": 1}
+2026-04-10T17:36:46Z | INFO | {"count": 1, "event": "insights_ready"}
+2026-04-10T17:36:46Z | INFO | {"content": "Hi Heerlijk Chocolade,\n\nI looked at your market context around https://heerlijkchocolade.nl/ and put together a few opportunities based on comparable client cases:\n- A similar Nekx client (Kardewu) saw Philing's course visitors improved by +25%. This could be a practical SEO opportunity for Heerlijk Chocolade as well.\n\nIf useful, I can share a short walkthrough with practical next steps and expected impact ranges.\n\nBest,\nNekx SEO\n\nUnsubscribe: reply with \"unsubscribe\" and I will not contact you again.\n", "dry_run": true, "event": "generated_email", "experiment_id": 1, "lead_id": 23, "subject": "Case-based growth idea for bakery_desserts"}
+2026-04-10T17:36:46Z | INFO | {"dry_run": true, "event": "done", "experiment_id": 1, "lead_id": 23}
+2026-04-10T17:38:31Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start"}
+2026-04-10T17:38:31Z | INFO | {"event": "throttle_bypassed", "reason": "dry_run"}
+2026-04-10T17:38:31Z | INFO | {"event": "selected_lead", "lead_id": 23, "segment": "bakery_desserts"}
+2026-04-10T17:38:31Z | INFO | {"event": "selected_experiment", "experiment_id": 1}
+2026-04-10T17:38:31Z | INFO | {"count": 1, "event": "insights_ready"}
+2026-04-10T17:38:31Z | INFO | {"content": "Hi Heerlijk Chocolade,\n\nI looked at your market context around https://heerlijkchocolade.nl/ and put together a few opportunities based on comparable client cases:\n- A similar Nekx client (Kardewu) saw Philing's course visitors improved by +25%. This could be a practical SEO opportunity for Heerlijk Chocolade as well.\n\nIf useful, I can share a short walkthrough with practical next steps and expected impact ranges.\n\nBest,\nNekx SEO\n\nUnsubscribe: reply with \"unsubscribe\" and I will not contact you again.\n", "dry_run": true, "event": "generated_email", "experiment_id": 1, "lead_id": 23, "subject": "Case-based growth idea for bakery_desserts"}
+2026-04-10T17:38:31Z | INFO | {"dry_run": true, "event": "done", "experiment_id": 1, "lead_id": 23}
+2026-04-10T18:04:04Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start", "mode": "test"}
+2026-04-10T18:04:04Z | INFO | {"dry_run": true, "event": "throttle_bypassed", "mode": "test", "reason": "dry_run"}
+2026-04-10T18:04:04Z | INFO | {"dry_run": true, "event": "selected_lead", "lead_id": 23, "mode": "test", "segment": "bakery_desserts"}
+2026-04-10T18:04:04Z | INFO | {"dry_run": true, "event": "selected_experiment", "experiment_id": 1, "mode": "test"}
+2026-04-10T18:04:04Z | INFO | {"count": 1, "dry_run": true, "event": "insights_ready", "mode": "test"}
+2026-04-10T18:04:04Z | INFO | {"content": "Hi Heerlijk Chocolade,\n\nI looked at your market context around https://heerlijkchocolade.nl/ and put together a few opportunities based on comparable client cases:\n- A similar Nekx client (SealteQ) saw SealteQ South (Geleen) visitors improved by +236%. This could be a practical SEO opportunity for Heerlijk Chocolade as well.\n\nIf useful, I can share a short walkthrough with practical next steps and expected impact ranges.\n\nBest,\nNekx SEO\n\nUnsubscribe: reply with \"unsubscribe\" and I will not contact you again.\n", "dry_run": true, "event": "generated_email", "experiment_id": 1, "lead_id": 23, "mode": "test", "subject": "Case-based growth idea for bakery_desserts"}
+2026-04-10T18:04:04Z | INFO | {"dry_run": true, "event": "done", "experiment_id": 1, "lead_id": 23, "mode": "test"}
+2026-04-10T18:04:04Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start", "mode": "live"}
+2026-04-10T18:04:04Z | INFO | {"dry_run": true, "event": "throttle_bypassed", "mode": "live", "reason": "dry_run"}
+2026-04-10T18:04:04Z | INFO | {"dry_run": true, "event": "selected_lead", "lead_id": 23, "mode": "live", "segment": "bakery_desserts"}
+2026-04-10T18:04:04Z | INFO | {"dry_run": true, "event": "selected_experiment", "experiment_id": 1, "mode": "live"}
+2026-04-10T18:04:04Z | INFO | {"count": 1, "dry_run": true, "event": "insights_ready", "mode": "live"}
+2026-04-10T18:04:04Z | INFO | {"content": "Hi Heerlijk Chocolade,\n\nI looked at your market context around https://heerlijkchocolade.nl/ and put together a few opportunities based on comparable client cases:\n- A similar Nekx client (Dental Care Drenthe) saw Homepage visitors improved by +41%. This could be a practical SEO opportunity for Heerlijk Chocolade as well.\n\nIf useful, I can share a short walkthrough with practical next steps and expected impact ranges.\n\nBest,\nNekx SEO\n\nUnsubscribe: reply with \"unsubscribe\" and I will not contact you again.\n", "dry_run": true, "event": "generated_email", "experiment_id": 1, "lead_id": 23, "mode": "live", "subject": "Case-based growth idea for bakery_desserts"}
+2026-04-10T18:04:04Z | INFO | {"dry_run": true, "event": "done", "experiment_id": 1, "lead_id": 23, "mode": "live"}
+2026-04-10T18:05:24Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start", "mode": "test"}
+2026-04-10T18:05:24Z | INFO | {"dry_run": true, "event": "throttle_bypassed", "mode": "test", "reason": "dry_run"}
+2026-04-10T18:05:24Z | INFO | {"dry_run": true, "event": "selected_lead", "lead_id": 23, "mode": "test", "segment": "bakery_desserts"}
+2026-04-10T18:05:24Z | INFO | {"dry_run": true, "event": "selected_experiment", "experiment_id": 1, "mode": "test"}
+2026-04-10T18:05:24Z | INFO | {"count": 1, "dry_run": true, "event": "insights_ready", "mode": "test"}
+2026-04-10T18:05:24Z | INFO | {"content": "Hi Heerlijk Chocolade,\n\nI looked at your market context around https://heerlijkchocolade.nl/ and put together a few opportunities based on comparable client cases:\n- A similar Nekx client (Kardewu) saw Philing's course visitors improved by +25%. This could be a practical SEO opportunity for Heerlijk Chocolade as well.\n\nIf useful, I can share a short walkthrough with practical next steps and expected impact ranges.\n\nBest,\nNekx SEO\n\nUnsubscribe: reply with \"unsubscribe\" and I will not contact you again.\n", "dry_run": true, "event": "generated_email", "experiment_id": 1, "lead_id": 23, "mode": "test", "subject": "Case-based growth idea for bakery_desserts"}
+2026-04-10T18:05:24Z | INFO | {"dry_run": true, "event": "done", "experiment_id": 1, "lead_id": 23, "mode": "test"}
+2026-04-10T19:45:59Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T19:45:59Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 23, "mode": "live", "segment": "bakery_desserts"}
+2026-04-10T19:45:59Z | INFO | {"dry_run": false, "event": "selected_experiment", "experiment_id": 1, "mode": "live"}
+2026-04-10T19:45:59Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-04-10T19:45:59Z | INFO | {"content": "Hi Heerlijk Chocolade,\n\nI looked at your market context around https://heerlijkchocolade.nl/ and put together a few opportunities based on comparable client cases:\n- A similar Nekx client (Kardewu) saw Philing's course visitors improved by +25%. This could be a practical SEO opportunity for Heerlijk Chocolade as well.\n\nIf useful, I can share a short walkthrough with practical next steps and expected impact ranges.\n\nBest,\nNekx SEO\n\nUnsubscribe: reply with \"unsubscribe\" and I will not contact you again.\n", "dry_run": false, "email_id": 4, "event": "generated_email", "experiment_id": 1, "lead_id": 23, "mode": "live", "subject": "Case-based growth idea for bakery_desserts"}
+2026-04-10T19:45:59Z | INFO | {"dry_run": false, "email_id": 4, "event": "ready", "mode": "live"}
+2026-04-10T19:45:59Z | INFO | {"dry_run": false, "email_id": 4, "event": "done", "lead_id": 23, "mode": "live"}
+2026-04-10T19:46:06Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T19:46:06Z | INFO | {"detail": "next_allowed_at=2026-04-10T20:15:59+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-04-10T19:51:33Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T19:51:33Z | INFO | {"detail": "next_allowed_at=2026-04-10T20:15:59+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-04-10T20:01:39Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:01:39Z | INFO | {"detail": "next_allowed_at=2026-04-10T20:15:59+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-04-10T20:01:48Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:01:48Z | INFO | {"detail": "next_allowed_at=2026-04-10T20:15:59+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-04-10T20:02:01Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:02:01Z | INFO | {"detail": "next_allowed_at=2026-04-10T20:15:59+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-04-10T20:04:16Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:04:16Z | INFO | {"detail": "next_allowed_at=2026-04-10T20:15:59+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-04-10T20:09:18Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:09:18Z | INFO | {"detail": "next_allowed_at=2026-04-10T20:15:59+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-04-10T20:09:27Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:09:27Z | INFO | {"detail": "next_allowed_at=2026-04-10T20:15:59+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-04-10T20:10:32Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:10:32Z | INFO | {"detail": "next_allowed_at=2026-04-10T20:15:59+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-04-10T20:10:39Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:10:39Z | INFO | {"detail": "next_allowed_at=2026-04-10T20:15:59+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-04-10T20:10:46Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:10:46Z | INFO | {"detail": "next_allowed_at=2026-04-10T20:15:59+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-04-10T20:13:24Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:13:24Z | INFO | {"detail": "next_allowed_at=2026-04-10T20:15:59+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-04-10T20:27:30Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:27:30Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 41, "mode": "live", "segment": "bakery_desserts"}
+2026-04-10T20:27:30Z | INFO | {"dry_run": false, "event": "selected_experiment", "experiment_id": 1, "mode": "live"}
+2026-04-10T20:27:30Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-04-10T20:27:32Z | INFO | {"detail": "no such table: main.email_variants_old", "dry_run": false, "event": "error", "mode": "live", "reason": "unexpected_exception"}
+2026-04-10T20:29:34Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:29:34Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 41, "mode": "live", "segment": "bakery_desserts"}
+2026-04-10T20:29:34Z | INFO | {"dry_run": false, "event": "selected_experiment", "experiment_id": 1, "mode": "live"}
+2026-04-10T20:29:34Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-04-10T20:29:35Z | INFO | {"detail": "no such table: main.email_variants_old", "dry_run": false, "event": "error", "mode": "live", "reason": "unexpected_exception"}
+2026-04-10T20:29:41Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:29:41Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 41, "mode": "live", "segment": "bakery_desserts"}
+2026-04-10T20:29:41Z | INFO | {"dry_run": false, "event": "selected_experiment", "experiment_id": 1, "mode": "live"}
+2026-04-10T20:29:41Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-04-10T20:29:48Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:29:48Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 41, "mode": "live", "segment": "bakery_desserts"}
+2026-04-10T20:29:48Z | INFO | {"dry_run": false, "event": "selected_experiment", "experiment_id": 1, "mode": "live"}
+2026-04-10T20:29:48Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-04-10T20:29:50Z | INFO | {"detail": "no such table: main.email_variants_old", "dry_run": false, "event": "error", "mode": "live", "reason": "unexpected_exception"}
+2026-04-10T20:30:26Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:30:26Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 41, "mode": "live", "segment": "bakery_desserts"}
+2026-04-10T20:30:26Z | INFO | {"dry_run": false, "event": "selected_experiment", "experiment_id": 1, "mode": "live"}
+2026-04-10T20:30:26Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-04-10T20:30:27Z | INFO | {"detail": "no such table: main.email_variants_old", "dry_run": false, "event": "error", "mode": "live", "reason": "unexpected_exception"}
+2026-04-10T20:30:58Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:30:58Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 41, "mode": "live", "segment": "bakery_desserts"}
+2026-04-10T20:30:58Z | INFO | {"dry_run": false, "event": "selected_experiment", "experiment_id": 1, "mode": "live"}
+2026-04-10T20:30:58Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-04-10T20:31:01Z | INFO | {"detail": "no such table: main.email_variants_old", "dry_run": false, "event": "error", "mode": "live", "reason": "unexpected_exception"}
+2026-04-10T20:31:58Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:31:58Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 41, "mode": "live", "segment": "bakery_desserts"}
+2026-04-10T20:31:58Z | INFO | {"dry_run": false, "event": "selected_experiment", "experiment_id": 1, "mode": "live"}
+2026-04-10T20:31:58Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-04-10T20:31:59Z | INFO | {"detail": "no such table: main.email_variants_old", "dry_run": false, "event": "error", "mode": "live", "reason": "unexpected_exception"}
+2026-04-10T20:34:50Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:34:50Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 41, "mode": "live", "segment": "bakery_desserts"}
+2026-04-10T20:34:50Z | INFO | {"dry_run": false, "event": "selected_experiment", "experiment_id": 1, "mode": "live"}
+2026-04-10T20:34:50Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-04-10T20:34:54Z | INFO | {"detail": "no such table: main.email_variants_old", "dry_run": false, "event": "error", "mode": "live", "reason": "unexpected_exception"}
+2026-04-10T20:35:14Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:35:14Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 41, "mode": "live", "segment": "bakery_desserts"}
+2026-04-10T20:35:14Z | INFO | {"dry_run": false, "event": "selected_experiment", "experiment_id": 1, "mode": "live"}
+2026-04-10T20:35:14Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-04-10T20:35:15Z | INFO | {"detail": "no such table: main.email_variants_old", "dry_run": false, "event": "error", "mode": "live", "reason": "unexpected_exception"}
+2026-04-10T20:36:15Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:36:15Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 1, "mode": "live", "segment": "food"}
+2026-04-10T20:36:15Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_experiment"}
+2026-04-10T20:36:16Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:36:16Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 1, "mode": "live", "segment": "food"}
+2026-04-10T20:36:16Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_experiment"}
+2026-04-10T20:36:16Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:36:16Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 1, "mode": "live", "segment": "food"}
+2026-04-10T20:36:16Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_experiment"}
+2026-04-10T20:36:16Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:36:16Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 1, "mode": "live", "segment": "food"}
+2026-04-10T20:36:16Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_experiment"}
+2026-04-10T20:37:19Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:37:19Z | INFO | {"dry_run": false, "event": "selected_lead", "lead_id": 41, "mode": "live", "segment": "bakery_desserts"}
+2026-04-10T20:37:19Z | INFO | {"dry_run": false, "event": "selected_experiment", "experiment_id": 1, "mode": "live"}
+2026-04-10T20:37:19Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-04-10T20:37:21Z | INFO | {"detail": "no such table: main.email_variants_old", "dry_run": false, "event": "error", "mode": "live", "reason": "unexpected_exception"}
+2026-04-10T20:40:35Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:40:35Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-10T20:44:13Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:44:13Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-10T20:45:48Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:45:48Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-10T20:45:52Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:45:52Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-10T20:46:00Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:46:00Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-10T20:46:44Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:46:44Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-10T20:46:58Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:46:58Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-10T20:46:58Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:46:59Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-10T20:46:59Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:46:59Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-10T20:47:00Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-10T20:47:00Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-12T08:44:14Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-12T08:44:14Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-12T09:14:14Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-12T09:14:14Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-15T07:43:22Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-15T07:43:22Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-15T08:14:53Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-15T08:14:53Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-15T08:46:35Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-15T08:46:35Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-15T18:56:14Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-15T18:56:14Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-15T19:26:47Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-15T19:26:47Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-15T19:57:22Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-15T19:57:22Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T05:34:31Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T05:34:31Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T06:18:01Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T06:18:01Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T07:31:06Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T07:31:06Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T08:01:53Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T08:01:53Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T08:32:44Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T08:32:44Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T09:03:41Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T09:03:41Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T09:34:45Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T09:34:45Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T10:05:54Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T10:05:54Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T10:37:03Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T10:37:03Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T11:08:17Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T11:08:17Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T11:39:34Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T11:39:34Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T12:10:42Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T12:10:42Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T12:41:34Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T12:41:34Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T13:12:52Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T13:12:52Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T13:44:04Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T13:44:04Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T14:15:33Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T14:15:33Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T14:47:05Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T14:47:05Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T15:18:36Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T15:18:36Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T15:49:37Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T15:49:37Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T16:20:14Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T16:20:14Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T16:50:44Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T16:50:44Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T17:21:09Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T17:21:09Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T17:51:33Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T17:51:33Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T18:21:59Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T18:21:59Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T18:52:27Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T18:52:27Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T19:22:58Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T19:22:58Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T19:53:32Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T19:53:32Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T20:24:06Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T20:24:06Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-16T20:54:23Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-16T20:54:23Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-17T09:30:06Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-17T09:30:06Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-17T10:00:44Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-17T10:00:44Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-17T10:31:24Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-17T10:31:24Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-17T11:01:54Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-17T11:01:54Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-17T11:32:07Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-17T11:32:07Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-17T12:02:07Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-17T12:02:07Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-04-17T12:32:07Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-04-17T12:32:07Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T14:51:08Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T14:51:08Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T15:10:11Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T15:10:11Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T15:40:45Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T15:40:45Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T15:52:32Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T15:52:32Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T15:58:43Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T15:58:43Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T16:27:37Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T16:27:37Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T16:30:52Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T16:30:52Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T16:48:46Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T16:48:46Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T16:50:04Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T16:50:04Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T16:55:23Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T16:55:23Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T16:55:23Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T16:55:23Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T16:55:24Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T16:55:24Z | INFO | {"detail": "next_allowed_at=2026-05-01T17:25:24+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-05-01T16:55:24Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T16:55:24Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T16:56:28Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T16:56:28Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T17:06:29Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T17:06:29Z | INFO | {"ab_test_id": 1, "country": "Netherlands", "dry_run": false, "event": "selected_ab_test", "lead_id": 14, "mode": "live", "segment": "bakery_desserts", "side": "A"}
+2026-05-01T17:06:29Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-05-01T17:06:36Z | INFO | {"detail": "no such table: main.email_variants_old", "dry_run": false, "event": "error", "mode": "live", "reason": "unexpected_exception"}
+2026-05-01T17:27:07Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T17:27:07Z | INFO | {"ab_test_id": 1, "country": "Netherlands", "dry_run": false, "event": "selected_ab_test", "lead_id": 14, "mode": "live", "segment": "bakery_desserts", "side": "A"}
+2026-05-01T17:27:07Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-05-01T17:27:15Z | INFO | {"detail": "no such table: main.email_variants_old", "dry_run": false, "event": "error", "mode": "live", "reason": "unexpected_exception"}
+2026-05-01T17:57:59Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T17:57:59Z | INFO | {"ab_test_id": 1, "country": "Netherlands", "dry_run": false, "event": "selected_ab_test", "lead_id": 14, "mode": "live", "segment": "bakery_desserts", "side": "A"}
+2026-05-01T17:57:59Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-05-01T17:58:06Z | INFO | {"detail": "no such table: main.email_variants_old", "dry_run": false, "event": "error", "mode": "live", "reason": "unexpected_exception"}
+2026-05-01T18:11:17Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T18:11:17Z | INFO | {"ab_test_id": 1, "country": "Netherlands", "dry_run": false, "event": "selected_ab_test", "lead_id": 14, "mode": "live", "segment": "bakery_desserts", "side": "A"}
+2026-05-01T18:11:17Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-05-01T18:11:24Z | INFO | {"ab_side": "A", "ab_test_id": 1, "content": "```json\n{\n  \"subject\": \"Meer lokale zoetekauwen voor TOET het TOETjesparadijs?\",\n  \"body\": \"Beste team van TOET het TOETjesparadijs,\\n\\", "dry_run": false, "email_id": 1, "event": "generated_email", "experiment_id": null, "lead_id": 14, "mode": "live", "subject": "Quick SEO growth idea for TOET het TOETjesparadijs"}
+2026-05-01T18:11:24Z | INFO | {"dry_run": false, "email_id": 1, "event": "ready", "mode": "live"}
+2026-05-01T18:11:24Z | INFO | {"dry_run": false, "email_id": 1, "event": "done", "lead_id": 14, "mode": "live"}
+2026-05-01T18:12:21Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T18:12:22Z | INFO | {"detail": "next_allowed_at=2026-05-01T18:41:17+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-05-01T18:42:44Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": true, "event": "start", "mode": "test"}
+2026-05-01T18:42:44Z | INFO | {"dry_run": true, "event": "throttle_bypassed", "mode": "test", "reason": "dry_run"}
+2026-05-01T18:42:44Z | INFO | {"ab_test_id": 1, "country": "Netherlands", "dry_run": true, "event": "selected_ab_test", "lead_id": 15, "mode": "test", "segment": "bakery_desserts", "side": "B"}
+2026-05-01T18:42:44Z | INFO | {"count": 1, "dry_run": true, "event": "insights_ready", "mode": "test"}
+2026-05-01T18:42:44Z | INFO | {"ab_side": "B", "ab_test_id": 1, "content": "Hallo Paais,\n\nI looked at your market context around https://paais.nl/ and put together a few opportunities based on comparable client cases:\n- A similar Nekx client (Dental Care Drenthe) saw Location Erica visitors improved by +292%. This could be a practical SEO opportunity for Paais as well.\n\nIf useful, I can share a short walkthrough with practical next steps and expected impact ranges.\n\nBest,\nNekx SEO\n\nUnsubscribe: reply with \"unsubscribe\" and I will not contact you again.\n", "dry_run": true, "event": "generated_email", "experiment_id": null, "lead_id": 15, "mode": "test", "subject": "Case-based SEO idea for Paais"}
+2026-05-01T18:42:44Z | INFO | {"ab_side": "B", "ab_test_id": 1, "dry_run": true, "event": "done", "experiment_id": null, "lead_id": 15, "mode": "test"}
+2026-05-01T18:43:01Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T18:43:01Z | INFO | {"ab_test_id": 1, "country": "Netherlands", "dry_run": false, "event": "selected_ab_test", "lead_id": 15, "mode": "live", "segment": "bakery_desserts", "side": "B"}
+2026-05-01T18:43:01Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-05-01T18:43:10Z | INFO | {"ab_side": "B", "ab_test_id": 1, "content": "```json\n{\n  \"subject\": \"Snelle SEO-kansen voor Paais?\",\n  \"body\": \"Beste team van Paais,\\n\\nAls liefhebber van lokale ambachtelijke bedrijven", "dry_run": false, "email_id": 2, "event": "generated_email", "experiment_id": null, "lead_id": 15, "mode": "live", "subject": "Quick SEO growth idea for Paais"}
+2026-05-01T18:43:10Z | INFO | {"dry_run": false, "email_id": 2, "event": "ready", "mode": "live"}
+2026-05-01T18:43:10Z | INFO | {"dry_run": false, "email_id": 2, "event": "done", "lead_id": 15, "mode": "live"}
+2026-05-01T18:44:28Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T18:44:28Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T18:44:28Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T18:44:29Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T18:44:29Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T18:44:29Z | INFO | {"detail": "next_allowed_at=2026-05-01T19:14:29+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-05-01T18:44:29Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T18:44:29Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T18:46:49Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T18:46:49Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T18:46:49Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T18:46:49Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T18:46:50Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T18:46:50Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T18:46:50Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T18:46:50Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T19:02:50Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T19:02:50Z | INFO | {"detail": "next_allowed_at=2026-05-01T19:13:01+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-05-01T19:06:49Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T19:06:49Z | INFO | {"detail": "next_allowed_at=2026-05-01T19:13:01+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-05-01T19:19:59Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T19:19:59Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T19:19:59Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T19:19:59Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T19:19:59Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T19:19:59Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T19:19:59Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T19:19:59Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T19:37:44Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T19:37:44Z | INFO | {"ab_test_id": 1, "country": "Netherlands", "dry_run": false, "event": "selected_ab_test", "lead_id": 23, "mode": "live", "segment": "bakery_desserts", "side": "A"}
+2026-05-01T19:37:44Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-05-01T19:37:51Z | INFO | {"ab_side": "A", "ab_test_id": 1, "content": "```json\n{\n  \"subject\": \"Meer lokale chocoladeliefhebbers voor Heerlijk Chocolade?\",\n  \"body\": \"Beste team van Heerlijk Chocolade,\\n\\nIk ben [Uw", "dry_run": false, "email_id": 3, "event": "generated_email", "experiment_id": null, "lead_id": 23, "mode": "live", "subject": "Quick SEO growth idea for Heerlijk Chocolade"}
+2026-05-01T19:37:51Z | INFO | {"dry_run": false, "email_id": 3, "event": "ready", "mode": "live"}
+2026-05-01T19:37:51Z | INFO | {"dry_run": false, "email_id": 3, "event": "done", "lead_id": 23, "mode": "live"}
+2026-05-01T20:03:46Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T20:03:46Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T20:03:46Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T20:03:46Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T20:03:46Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T20:03:46Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T20:03:47Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T20:03:47Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T20:08:49Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T20:08:50Z | INFO | {"ab_test_id": 1, "country": "Netherlands", "dry_run": false, "event": "selected_ab_test", "lead_id": 41, "mode": "live", "segment": "bakery_desserts", "side": "B"}
+2026-05-01T20:08:50Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-05-01T20:08:56Z | INFO | {"ab_side": "B", "ab_test_id": 1, "content": "```json\n{\n  \"subject\": \"CHCO Groningen: Kansen voor meer lokale websitebezoekers?\",\n  \"body\": \"Beste team van CHCO Groningen,\\n\\nMijn naam is [Jouw", "dry_run": false, "email_id": 4, "event": "generated_email", "experiment_id": null, "lead_id": 41, "mode": "live", "subject": "Quick SEO growth idea for CHCO Groningen"}
+2026-05-01T20:08:56Z | INFO | {"dry_run": false, "email_id": 4, "event": "ready", "mode": "live"}
+2026-05-01T20:08:56Z | INFO | {"dry_run": false, "email_id": 4, "event": "done", "lead_id": 41, "mode": "live"}
+2026-05-01T20:15:42Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T20:15:42Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T20:15:42Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T20:15:43Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T20:15:44Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T20:15:44Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T20:15:44Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T20:15:45Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T20:39:55Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T20:39:55Z | INFO | {"ab_test_id": 1, "country": "Netherlands", "dry_run": false, "event": "selected_ab_test", "lead_id": 57, "mode": "live", "segment": "bakery_desserts", "side": "A"}
+2026-05-01T20:39:55Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-05-01T20:40:02Z | INFO | {"ab_side": "A", "ab_test_id": 1, "content": "Hallo Croissanterie Pigalle,\n\nI looked at your market context around https://croissanteriepigalle.nl/ and put together a few opportunities based on comparable client cases:\n- A similar Nekx client (Kardewu) saw Homepage visitors improved by +31%. This could be a practical SEO opportunity for Croissanterie Pigalle as well.\n\nIf useful, I can share a short walkthrough with practical next steps and expected impact ranges.\n\nBest,\nNekx SEO\n\nUnsubscribe: reply with \"unsubscribe\" and I will not contact you again.\n", "dry_run": false, "email_id": 5, "event": "generated_email", "experiment_id": null, "lead_id": 57, "mode": "live", "subject": "Case-based SEO idea for Croissanterie Pigalle"}
+2026-05-01T20:40:02Z | INFO | {"dry_run": false, "email_id": 5, "event": "ready", "mode": "live"}
+2026-05-01T20:40:02Z | INFO | {"dry_run": false, "email_id": 5, "event": "done", "lead_id": 57, "mode": "live"}
+2026-05-01T21:10:53Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T21:10:53Z | INFO | {"ab_test_id": 1, "country": "Netherlands", "dry_run": false, "event": "selected_ab_test", "lead_id": 63, "mode": "live", "segment": "bakery_desserts", "side": "B"}
+2026-05-01T21:10:53Z | INFO | {"count": 1, "dry_run": false, "event": "insights_ready", "mode": "live"}
+2026-05-01T21:11:01Z | INFO | {"ab_side": "B", "ab_test_id": 1, "content": "Hallo Broodje van Eigen Deeg,\n\nI looked at your market context around https://broodjevaneigendeeg.nl/ and put together a few opportunities based on comparable client cases:\n- A similar Nekx client (Kardewu) saw General screenings improved by +44%. This could be a practical SEO opportunity for Broodje van Eigen Deeg as well.\n\nIf useful, I can share a short walkthrough with practical next steps and expected impact ranges.\n\nBest,\nNekx SEO\n\nUnsubscribe: reply with \"unsubscribe\" and I will not contact you again.\n", "dry_run": false, "email_id": 6, "event": "generated_email", "experiment_id": null, "lead_id": 63, "mode": "live", "subject": "Case-based SEO idea for Broodje van Eigen Deeg"}
+2026-05-01T21:11:01Z | INFO | {"dry_run": false, "email_id": 6, "event": "ready", "mode": "live"}
+2026-05-01T21:11:01Z | INFO | {"dry_run": false, "email_id": 6, "event": "done", "lead_id": 63, "mode": "live"}
+2026-05-01T21:30:13Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T21:30:14Z | INFO | {"detail": "next_allowed_at=2026-05-01T21:40:53+00:00", "dry_run": false, "event": "skip", "mode": "live", "reason": "interval_not_reached"}
+2026-05-01T21:35:49Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T21:35:49Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T21:35:50Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T21:35:50Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T21:35:51Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T21:35:51Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T21:35:51Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T21:35:51Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T22:12:27Z | INFO | {"config_path": "/app/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T22:12:27Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T22:16:36Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T22:16:36Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T22:16:36Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T22:16:37Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T22:16:37Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T22:16:37Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
+2026-05-01T22:16:37Z | INFO | {"config_path": "/home/brieuc/AIAndYourProfession/Nekx-SEO-outbound-marketing/data/scheduler_config.json", "dry_run": false, "event": "start", "mode": "live"}
+2026-05-01T22:16:37Z | INFO | {"dry_run": false, "event": "skip", "mode": "live", "reason": "no_active_ab_test"}
