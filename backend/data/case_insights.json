@@ -1,0 +1,68 @@
+{
+  "source": "nekxseo.com results page snapshot (provided HTML)",
+  "captured_on": "2026-04-10",
+  "global_stats": {
+    "cases": 4,
+    "screenings": "648K",
+    "clicks": "11.7K",
+    "measurement_period": "3 months"
+  },
+  "cases": [
+    {
+      "name": "Dental Care Drenthe",
+      "summary": "Dental practice with multiple locations. Results were achieved with minimal client workload.",
+      "period": "3 months",
+      "tags": ["service_business", "local_business", "multi_location"],
+      "metrics": [
+        {"label": "Homepage visitors", "value": "+41%"},
+        {"label": "Team page visitors", "value": "+192%"},
+        {"label": "Location Erica visitors", "value": "+292%"},
+        {"label": "Location Meppel visitors", "value": "+294%"}
+      ],
+      "notes": [
+        "0 hours of own work"
+      ]
+    },
+    {
+      "name": "SealteQ",
+      "summary": "Industrial specialist with NL and DE visibility growth.",
+      "period": "3 months",
+      "tags": ["b2b_industrial", "multi_market"],
+      "metrics": [
+        {"label": "SealteQ South (Geleen) visitors", "value": "+236%"},
+        {"label": "Working with visitors", "value": "+43%"},
+        {"label": "DE: Fundament Sanierung visitors", "value": "+1620%"},
+        {"label": "Kwaaitaal floor visitors", "value": "+655%"}
+      ],
+      "notes": []
+    },
+    {
+      "name": "Beauty Institute Amice",
+      "summary": "Local beauty salon with treatment-level discoverability improvements.",
+      "period": "3 months",
+      "tags": ["service_business", "local_business", "beauty"],
+      "metrics": [
+        {"label": "Homepage visitors", "value": "+55%"},
+        {"label": "Cryolipolysis visitors", "value": "+33%"},
+        {"label": "About us visitors", "value": "+125%"},
+        {"label": "Clicks", "value": "+21%"}
+      ],
+      "notes": []
+    },
+    {
+      "name": "Kardewu",
+      "summary": "Beauty courses and treatments provider with new page indexing gains.",
+      "period": "3 months",
+      "tags": ["service_business", "local_business", "education"],
+      "metrics": [
+        {"label": "Homepage visitors", "value": "+31%"},
+        {"label": "Philing's course visitors", "value": "+25%"},
+        {"label": "Clicks", "value": "+29%"},
+        {"label": "General screenings", "value": "+44%"}
+      ],
+      "notes": [
+        "Focus: indexing new pages"
+      ]
+    }
+  ]
+}
