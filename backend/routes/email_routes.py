@@ -1,10 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 
 from ..database import Db, row_to_dict, utcnow_iso
 from ..domain_types import DeliveryStatus, EmailEventType, LeadStatus, can_transition_lead_status
 from ..schemas.email_schema import EmailGenerateIn, EmailOut, EmailSendIn
 from ..services.email_service import render_email
-
+from ..services.delivery_service import send_email_via_resend
 
 router = APIRouter(tags=["emails"])
 
@@ -68,20 +68,54 @@ def send_email(body: EmailSendIn, db=Db) -> dict:
             "updated_at": utcnow_iso(),
             "idempotent": True,
         }
+    
     if current_status != DeliveryStatus.READY.value:
         raise HTTPException(status_code=409, detail=f"invalid email delivery status: {current_status or 'unknown'}")
+    
+    lead = db.execute("SELECT * FROM leads WHERE lead_id = ?", (email["lead_id"],)).fetchone()
+    if not lead or not lead.get("contact_email"):
+        raise HTTPException(status_code=400, detail="lead or contact_email not found")
+    
+    # 1. Trigger Resend Live Delivery Service
+    resend_result = send_email_via_resend(
+        to_email=lead["contact_email"],
+        subject=email["subject"],
+        html_body=email["content"]
+    )
 
-    # Provider integration (Resend) is intentionally not active in v1.1.
-    # Keep this endpoint as a readiness marker without downgrading sent rows.
+    if not resend_result["success"]:
+        raise HTTPException(status_code=500, detail=f"Resend delivery error: {resend_result['error']}")
+
+    provider_id = resend_result["provider_id"]
     now = utcnow_iso()
+
+    # 2. Update status mapping to SENT instead of dropping back to READY
     db.execute(
-        "UPDATE email_variants SET delivery_status = ? WHERE email_id = ?",
-        (DeliveryStatus.READY.value, body.email_id),
+        "UPDATE email_variants SET delivery_status = ?, sent_at = ? WHERE email_id = ?",
+        (DeliveryStatus.SENT.value, now, body.email_id),
     )
     db.execute(
         "INSERT INTO email_events (email_id, event_type, provider_id, event_time) VALUES (?, ?, ?, ?)",
-        (body.email_id, EmailEventType.READY.value, None, now),
+        (body.email_id, EmailEventType.SENT.value, provider_id, now),
     )
+
+    # 3. Transition lead target status to CONTACTED
+    current_lead_status = str(lead["status"] or "")
+    if (
+        can_transition_lead_status(current_lead_status, LeadStatus.CONTACTED.value)
+        and current_lead_status != LeadStatus.CONTACTED.value
+    ):
+        db.execute(
+            "UPDATE leads SET status = ? WHERE lead_id = ?",
+            (LeadStatus.CONTACTED.value, lead["lead_id"]),
+        )
+
     db.commit()
 
-    return {"ok": True, "email_id": body.email_id, "delivery_status": "ready", "updated_at": now}
+    return {
+        "ok": True, 
+        "email_id": body.email_id, 
+        "delivery_status": DeliveryStatus.SENT.value, 
+        "updated_at": now, 
+        "provider_id": provider_id
+    }
