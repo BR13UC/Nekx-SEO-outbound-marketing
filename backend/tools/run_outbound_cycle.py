@@ -12,6 +12,7 @@ from backend.database import connect, init_db, row_to_dict, utcnow_iso
 from backend.domain_types import LeadStatus, can_transition_lead_status
 from backend.services.email_service import render_email
 from backend.services.seo_service import analyze_lead_opportunities
+from backend.services.delivery_service import send_email_via_resend
 
 
 DEFAULT_CONFIG = {
@@ -219,7 +220,7 @@ def interval_guard(conn, min_interval_minutes: int) -> tuple[bool, str | None]:
         """
         SELECT MAX(created_at) AS last_activity_at
         FROM email_variants
-        WHERE delivery_status IN ('ready', 'sent')
+        WHERE delivery_status = 'sent'
         """
     ).fetchone()
     last_activity_at = last_activity["last_activity_at"] if last_activity else None
@@ -272,6 +273,52 @@ def run_cycle(dry_run: bool = False, mode: str = "live") -> int:
     try:
         init_db(conn)
 
+        #PRIORITY DELIVERY OF ‘READY’ EMAILS
+        if not effective_dry_run:
+            ready_emails = conn.execute(
+                """
+                SELECT ev.*, l.contact_email 
+                FROM email_variants ev 
+                JOIN leads l ON ev.lead_id = l.lead_id 
+                WHERE ev.delivery_status = 'ready'
+                """
+            ).fetchall()
+
+            if ready_emails:
+                log("dispatch_started", count=len(ready_emails), detail="Processing existing ready emails queue")
+                for r_email in ready_emails:
+                    email_dict = row_to_dict(r_email)
+                    to_email = email_dict.get("contact_email")
+                    
+                    if not to_email:
+                        conn.execute("UPDATE email_variants SET delivery_status = 'failed' WHERE email_id = ?", (email_dict["email_id"],))
+                        continue
+
+                    # Envoi via l'API Resend
+                    result = send_email_via_resend(
+                        to_email=to_email,
+                        subject=email_dict["subject"],
+                        html_body=email_dict["content"]
+                    )
+
+                    if result.get("success"):
+                        now_sent_iso = utcnow_iso()
+                        conn.execute(
+                            "UPDATE email_variants SET delivery_status = 'sent', sent_at = ? WHERE email_id = ?",
+                            (now_sent_iso, email_dict["email_id"])
+                        )
+                        conn.execute(
+                            "INSERT INTO email_events (email_id, event_type, provider_id, event_time) VALUES (?, 'sent', ?, ?)",
+                            (email_dict["email_id"], result.get("provider_id"), now_sent_iso)
+                        )
+                        conn.execute("UPDATE leads SET status = ? WHERE lead_id = ?", (LeadStatus.WRITTEN.value, email_dict["lead_id"]))
+                        log("email_dispatched_successfully", email_id=email_dict["email_id"])
+                    else:
+                        log("email_dispatch_failed", email_id=email_dict["email_id"], error=result.get("error"))
+                
+                conn.commit()
+
+        #INTERVAL SECURITY AND SEARCH FOR NEW LEADS
         if effective_dry_run:
             log("throttle_bypassed", reason="dry_run")
         else:
@@ -416,3 +463,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    
