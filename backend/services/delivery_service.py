@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import logging
 import os
 from typing import Any
 
 import resend
+
+logger = logging.getLogger(__name__)
 
 
 def send_email_via_resend(
@@ -16,11 +19,11 @@ def send_email_via_resend(
     tags: list[dict[str, str]] | None = None,
 ) -> dict[str, Any]:
     api_key = os.getenv("RESEND_API_KEY")
-    sender = from_email or os.getenv("RESEND_FROM_EMAIL")
+    sender = from_email or os.getenv("RESEND_FROM_EMAIL") or os.getenv("NEKX_FROM_EMAIL")
     if not api_key:
         return {"success": False, "error": "RESEND_API_KEY is missing", "provider_id": None}
     if not sender:
-        return {"success": False, "error": "RESEND_FROM_EMAIL is missing", "provider_id": None}
+        return {"success": False, "error": "RESEND_FROM_EMAIL or NEKX_FROM_EMAIL is missing", "provider_id": None}
 
     resend.api_key = api_key
     params: resend.Emails.SendParams = {
@@ -37,12 +40,14 @@ def send_email_via_resend(
     try:
         response = resend.Emails.send(params)
     except Exception as exc:
+        logger.error("Error during Resend delivery: %s", exc)
         return {"success": False, "error": str(exc), "provider_id": None}
 
     provider_id = _extract_provider_id(response)
     if not provider_id:
         return {"success": False, "error": f"Resend response did not include an id: {response!r}", "provider_id": None}
 
+    logger.info("Email sent successfully: %s", provider_id)
     return {"success": True, "error": None, "provider_id": provider_id, "response": response}
 
 

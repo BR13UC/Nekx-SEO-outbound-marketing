@@ -73,9 +73,9 @@ def send_email(body: EmailSendIn, db=Db) -> dict:
         raise HTTPException(status_code=409, detail=f"invalid email delivery status: {current_status or 'unknown'}")
     
     lead = db.execute("SELECT * FROM leads WHERE lead_id = ?", (email["lead_id"],)).fetchone()
-    if not lead or not lead.get("contact_email"):
+    if not lead or not dict(lead).get("contact_email"):
         raise HTTPException(status_code=400, detail="lead or contact_email not found")
-    
+
     # 1. Trigger Resend Live Delivery Service
     resend_result = send_email_via_resend(
         to_email=lead["contact_email"],
@@ -89,7 +89,7 @@ def send_email(body: EmailSendIn, db=Db) -> dict:
     provider_id = resend_result["provider_id"]
     now = utcnow_iso()
 
-    # 2. Update status mapping to SENT instead of dropping back to READY
+    # 2. Update local database tables with accurate SENT status
     db.execute(
         "UPDATE email_variants SET delivery_status = ?, sent_at = ? WHERE email_id = ?",
         (DeliveryStatus.SENT.value, now, body.email_id),
